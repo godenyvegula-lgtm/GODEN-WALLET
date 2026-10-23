@@ -2,2153 +2,707 @@
 <html lang="sw">
 <head>
 <meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width,initial-scale=1.0,user-scalable=no">
-
-<meta name="theme-color" content="#02070b">
-
-<title>GODEN WALLET // CYBER FINANCE</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#0d8a4d">
+<script>
+(function(){
+  function apply(t){
+    document.documentElement.setAttribute('data-theme',t);
+    var m=document.querySelector('meta[name="theme-color"]');
+    if(m) m.setAttribute('content',t==='dark'?'#0a0f0d':'#0d8a4d');
+    document.querySelectorAll('.theme-btn').forEach(function(b){b.textContent=t==='dark'?'☀️':'🌙';});
+  }
+  var t='light';
+  try{ t=localStorage.getItem('gw-theme')||'light'; }catch(e){}
+  document.documentElement.setAttribute('data-theme',t);
+  window.toggleTheme=function(){
+    var n=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+    try{ localStorage.setItem('gw-theme',n); }catch(e){}
+    apply(n);
+  };
+  document.addEventListener('DOMContentLoaded',function(){ apply(t); });
+})();
+</script>
+<title>Goden Wallet</title>
 
 <style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
-
+*{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#000000;
-  --bg2:#000000;
-  --card:rgba(0,0,0,.9);
-  --card2:rgba(0,0,0,.92);
-  --border:rgba(255,255,255,.18);
-  --border2:rgba(255,255,255,.18);
-  --text:#ffffff;
-  --muted:#c9c9c9;
-  --green:#20ff9a;
-  --green2:#00c978;
-  --cyan:#00e5ff;
-  --red:#ff496d;
-  --yellow:#ffd166;
-  --shadow:0 20px 60px rgba(0,0,0,.7);
-  --glow:0 0 25px rgba(255,255,255,.08);
+  --bg:#f0f4f8;--card:#ffffff;--border:#e2e8f0;--border2:#cbd5e1;
+  --text:#0f172a;--muted:#64748b;--faint:#94a3b8;
+  --green:#10b981;--green2:#059669;--greenbg:#ecfdf5;
+  --blue:#3b82f6;--bluebg:#eff6ff;
+  --red:#ef4444;--redbg:#fef2f2;
+  --yellow:#f59e0b;--yellowbg:#fffbeb;
+  --shadow:0 4px 20px -2px rgba(15,23,42,0.06), 0 2px 6px -1px rgba(15,23,42,0.04);
+  --surface:#ffffff;--topbar:rgba(255,255,255,.85);--track:#e2e8f0;--dangerborder:rgba(239,68,68,.3);
+  --toast-bg:#0f172a;--toast-text:#ffffff;--overlay:rgba(15,23,42,.4);
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --bg:#0a0f0d;--card:#131b17;--surface:#131b17;--border:#1f2e27;--border2:#2d4238;
+  --text:#f1f5f9;--muted:#94a3b8;--faint:#64748b;
+  --green:#10b981;--green2:#34d399;--greenbg:rgba(16,185,129,.12);
+  --blue:#60a5fa;--bluebg:rgba(96,165,250,.12);
+  --red:#f87171;--redbg:rgba(248,113,113,.12);
+  --yellow:#fbbf24;--yellowbg:rgba(251,191,36,.12);
+  --shadow:0 10px 25px -5px rgba(0,0,0,0.5);
+  --topbar:rgba(19,27,23,.85);--track:#1f2e27;--dangerborder:rgba(248,113,113,.25);
+  --toast-bg:#f1f5f9;--toast-text:#0a0f0d;--overlay:rgba(0,0,0,.7);
+  color-scheme:dark;
 }
 
 html{scroll-behavior:smooth}
-
-body{
-  font-family:"JetBrains Mono","SFMono-Regular",Consolas,
-  "Liberation Mono",monospace;
-  background:#000000;
-  color:var(--text);
-  min-height:100vh;
-  overflow-x:hidden;
-}
-
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:-1;
-  background-image:
-    linear-gradient(rgba(32,255,154,.025) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(32,255,154,.025) 1px,transparent 1px);
-  background-size:35px 35px;
-  mask-image:linear-gradient(to bottom,black,transparent 85%);
-}
-
-body::after{
-  content:"";
-  position:fixed;
-  left:0;
-  right:0;
-  top:-10%;
-  height:1px;
-  background:linear-gradient(90deg,transparent,var(--green),var(--cyan),transparent);
-  opacity:.22;
-  pointer-events:none;
-  z-index:999;
-  animation:scan 7s linear infinite;
-}
-
-@keyframes scan{
-  0%{top:-5%}
-  100%{top:105%}
-}
-
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;font-size:14px;letter-spacing:-0.01em}
 button,input,select{font:inherit}
-button{cursor:pointer}
+button{cursor:pointer;border:0;background:none;transition:all .18s ease;color:inherit}
+button:active{transform:scale(.96)}
 .hidden{display:none!important}
 
-::selection{
-  background:var(--green);
-  color:#00140c;
-}
-
-/* LOGIN */
-
-#loginScreen{
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:22px;
-}
-
-.login-card{
-  width:100%;
-  max-width:430px;
-  padding:30px 22px;
-  border:1px solid var(--border);
-  border-radius:25px;
-  background:#000000;
-  backdrop-filter:blur(25px);
-  box-shadow:var(--shadow),0 0 45px rgba(32,255,154,.06);
-  position:relative;
-  overflow:hidden;
-}
-
-.login-card::before{
-  content:"";
-  position:absolute;
-  top:0;
-  left:0;
-  right:0;
-  height:2px;
-  background:linear-gradient(90deg,transparent,var(--green),var(--cyan),transparent);
-}
-
-.login-card::after{
-  content:"SYSTEM READY";
-  position:absolute;
-  right:17px;
-  top:14px;
-  font-size:8px;
-  color:var(--green);
-  letter-spacing:1px;
-  opacity:.7;
-}
-
-.logo{
-  width:82px;
-  height:82px;
-  margin:0 auto 18px;
-  border-radius:22px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:29px;
-  font-weight:900;
-  color:#00150d;
-  background:linear-gradient(135deg,var(--green),var(--cyan));
-  box-shadow:0 0 20px rgba(32,255,154,.3),
-             0 0 55px rgba(0,229,255,.12);
-  position:relative;
-}
-
-.logo::after{
-  content:"";
-  position:absolute;
-  inset:6px;
-  border:1px solid rgba(0,0,0,.2);
-  border-radius:17px;
-}
-
-.login-card h1{
-  text-align:center;
-  font-size:25px;
-  letter-spacing:2px;
-  margin-bottom:8px;
-}
-
-.login-card p{
-  text-align:center;
-  color:var(--muted);
-  margin-bottom:25px;
-  font-size:11px;
-  letter-spacing:1px;
-}
-
-.field{margin-bottom:15px}
-
-.field label{
-  display:block;
-  color:#91b5ac;
-  font-size:10px;
-  margin-bottom:7px;
-  text-transform:uppercase;
-  letter-spacing:1px;
-}
-
+/* LOGIN SCREEN */
+#loginScreen{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(circle at top right, var(--greenbg), var(--bg) 60%)}
+.login-card{width:100%;max-width:400px;padding:36px 28px;border-radius:28px;background:var(--card);box-shadow:var(--shadow), 0 20px 40px -15px rgba(0,0,0,0.08);border:1px solid var(--border)}
+.logo{width:76px;height:76px;margin:0 auto 20px;border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;color:#fff;background:linear-gradient(135deg, #10b981, #047857);box-shadow:0 10px 25px rgba(16,185,129,.35)}
+.login-card h1{text-align:center;font-size:24px;font-weight:800;margin-bottom:6px;letter-spacing:-0.02em}
+.login-card p{text-align:center;color:var(--muted);margin-bottom:28px;font-size:13px}
+.field{margin-bottom:18px}
+.field label{display:block;color:var(--muted);font-size:12px;margin-bottom:7px;font-weight:700;text-transform:uppercase;letter-spacing:.03em}
 .input-wrap{position:relative}
+input,select,textarea{width:100%;border:1px solid var(--border2);outline:none;color:var(--text);background:var(--surface);padding:13px 15px;border-radius:14px;transition:.2s;font-size:14px}
+input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 4px rgba(16,185,129,.15)}
+input[readonly]{background:var(--bg);color:var(--muted)}
+.password-toggle{position:absolute;right:8px;top:50%;transform:translateY(-50%);color:var(--muted);padding:8px;font-size:16px}
+.primary-btn{width:100%;border-radius:14px;padding:14px;color:#fff;font-weight:700;background:linear-gradient(135deg, #10b981, #059669);box-shadow:0 6px 18px rgba(16,185,129,.3);transition:.2s}
+.primary-btn:hover{box-shadow:0 8px 22px rgba(16,185,129,.4)}
+.primary-btn:disabled{opacity:.55}
+.login-error{color:var(--red);font-size:13px;text-align:center;margin-top:14px;min-height:18px;font-weight:500}
 
-input,select{
-  width:100%;
-  border:1px solid rgba(32,255,154,.13);
-  outline:none;
-  color:var(--text);
-  background:rgba(0,0,0,.32);
-  padding:13px 14px;
-  border-radius:12px;
-  transition:.2s;
-}
-
-input:focus,select:focus{
-  border-color:rgba(32,255,154,.65);
-  box-shadow:0 0 0 2px rgba(32,255,154,.07),
-             0 0 20px rgba(32,255,154,.06);
-}
-
-select option{
-  background:#061016;
-  color:white;
-}
-
-.password-toggle{
-  position:absolute;
-  right:7px;
-  top:50%;
-  transform:translateY(-50%);
-  border:0;
-  background:transparent;
-  color:var(--muted);
-  padding:8px;
-}
-
-.primary-btn{
-  width:100%;
-  border:1px solid rgba(32,255,154,.4);
-  border-radius:12px;
-  padding:14px;
-  color:#00130b;
-  font-weight:900;
-  background:linear-gradient(135deg,var(--green),var(--green2));
-  box-shadow:0 0 20px rgba(32,255,154,.12);
-  transition:.2s;
-}
-
-.primary-btn:active{transform:scale(.98)}
-.primary-btn:disabled{opacity:.5}
-
-.login-error{
-  color:#ff7189;
-  font-size:11px;
-  text-align:center;
-  margin-top:12px;
-  min-height:18px;
-}
-
-/* APP */
-
-#app{
-  min-height:100vh;
-  padding-bottom:45px;
-}
-
-.topbar{
-  position:sticky;
-  top:0;
-  z-index:60;
-  padding:11px 14px;
-  background:rgba(0,0,0,.92);
-  backdrop-filter:blur(20px);
-  border-bottom:1px solid rgba(32,255,154,.12);
-}
-
-.topbar-inner{
-  max-width:1100px;
-  margin:auto;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-}
-
-.brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.brand-logo{
-  width:40px;
-  height:40px;
-  border-radius:11px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#00140d;
-  font-size:12px;
-  font-weight:900;
-  background:linear-gradient(135deg,var(--green),var(--cyan));
-}
-
-.brand h2{
-  font-size:15px;
-  letter-spacing:1px;
-}
-
-.brand small{
-  color:var(--green);
-  display:block;
-  margin-top:3px;
-  font-size:8px;
-  letter-spacing:1px;
-}
-
-.top-actions{
-  display:flex;
-  gap:6px;
-}
-
-.icon-btn{
-  width:38px;
-  height:38px;
-  border-radius:11px;
-  border:1px solid rgba(32,255,154,.14);
-  background:rgba(255,255,255,.025);
-  color:var(--green);
-  transition:.2s;
-}
-
-.icon-btn:hover{
-  border-color:var(--green);
-  box-shadow:0 0 15px rgba(32,255,154,.1);
-}
-
+/* APP TOPBAR */
+#app{min-height:100vh;padding-bottom:50px}
+.topbar{position:sticky;top:0;z-index:60;padding:12px 18px;background:var(--topbar);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.topbar-inner{max-width:1100px;margin:auto;display:flex;justify-content:space-between;align-items:center}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-logo{width:40px;height:40px;border-radius:14px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:900;background:linear-gradient(135deg, #10b981, #059669);box-shadow:0 4px 12px rgba(16,185,129,.25)}
+.brand h2{font-size:16px;font-weight:800;letter-spacing:-0.02em}
+.brand small{color:var(--muted);display:block;font-size:11px;font-weight:500}
+.top-actions{display:flex;gap:8px}
+.icon-btn{width:40px;height:40px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text);display:flex;align-items:center;justify-content:center;font-size:16px}
+.icon-btn:hover{background:var(--greenbg);border-color:var(--green);color:var(--green2)}
 .icon-btn.logout{color:var(--red)}
 
-/* NAVIGATOR */
-
-.nav-overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.65);
-  backdrop-filter:blur(3px);
-  z-index:80;
-  opacity:0;
-  pointer-events:none;
-  transition:.25s;
-}
-
-.nav-overlay.show{
-  opacity:1;
-  pointer-events:auto;
-}
-
-.notebook-nav{
-  position:fixed;
-  top:0;
-  right:-330px;
-  width:min(315px,88vw);
-  height:100vh;
-  z-index:90;
-  background:#000000;
-  border-left:1px solid rgba(32,255,154,.2);
-  box-shadow:-20px 0 60px rgba(0,0,0,.65);
-  transition:right .28s ease;
-  padding:18px;
-  overflow:auto;
-}
-
+/* NAVIGATOR SIDEBAR */
+.nav-overlay{position:fixed;inset:0;background:var(--overlay);backdrop-filter:blur(4px);z-index:88;opacity:0;pointer-events:none;transition:.25s}
+.nav-overlay.show{opacity:1;pointer-events:auto}
+.notebook-nav{position:fixed;top:0;right:-340px;width:min(320px,88vw);height:100vh;z-index:90;background:var(--surface);box-shadow:-15px 0 40px rgba(0,0,0,0.15);transition:right .3s cubic-bezier(.16,1,.3,1);padding:20px;overflow-y:auto}
 .notebook-nav.open{right:0}
-
-.nav-head{
-  padding:10px 4px 18px;
-  border-bottom:1px solid rgba(32,255,154,.1);
-  margin-bottom:15px;
-}
-
-.nav-title{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.nav-terminal{
-  width:38px;
-  height:38px;
-  border-radius:10px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#00140d;
-  background:linear-gradient(135deg,var(--green),var(--cyan));
-  font-weight:900;
-}
-
-.nav-head h3{
-  font-size:13px;
-  letter-spacing:1px;
-}
-
-.nav-head small{
-  display:block;
-  color:var(--green);
-  font-size:8px;
-  margin-top:4px;
-}
-
-.nav-close{
-  position:absolute;
-  right:14px;
-  top:14px;
-  width:35px;
-  height:35px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,.08);
-  background:rgba(255,255,255,.03);
-  color:white;
-}
-
-.nav-status{
-  margin:12px 0 18px;
-  padding:11px;
-  border:1px solid rgba(32,255,154,.1);
-  border-radius:11px;
-  background:rgba(32,255,154,.025);
-}
-
-.status-line{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-size:8px;
-  margin-bottom:7px;
-  color:var(--muted);
-}
-
+.nav-head{padding-bottom:18px;border-bottom:1px solid var(--border);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+.nav-title{display:flex;align-items:center;gap:12px}
+.nav-terminal{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;background:linear-gradient(135deg,var(--green),var(--green2));font-weight:900}
+.nav-head h3{font-size:16px;font-weight:800}
+.nav-head small{color:var(--muted);font-size:11px}
+.nav-close{width:36px;height:36px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:18px;display:flex;align-items:center;justify-content:center}
+.nav-status{margin-bottom:18px;padding:12px 14px;border-radius:14px;background:var(--bg)}
+.status-line{display:flex;justify-content:space-between;align-items:center;font-size:11px;margin-bottom:6px;color:var(--muted);font-weight:600;gap:10px}
+.status-line span:last-child{color:var(--text);font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .status-line:last-child{margin-bottom:0}
-.status-online{color:var(--green)}
+.status-online{color:var(--green)!important}
+.nav-section-label{font-size:10px;font-weight:800;color:var(--faint);margin:18px 6px 8px;letter-spacing:.8px;text-transform:uppercase}
+.nav-list{display:flex;flex-direction:column;gap:4px}
+.nav-item{width:100%;display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;color:var(--text);font-size:13px;font-weight:600;text-align:left}
+.nav-item:hover,.nav-item.active{color:var(--green2);background:var(--greenbg)}
+.nav-item .nav-icon{width:20px;text-align:center;font-size:15px;color:var(--muted)}
+.nav-item:hover .nav-icon,.nav-item.active .nav-icon{color:var(--green2)}
+.nav-badge{margin-left:auto;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px;background:var(--greenbg);color:var(--green2)}
+.nav-badge.red{background:var(--redbg);color:var(--red)}
+.nav-bottom{margin-top:24px;padding-top:16px;border-top:1px solid var(--border)}
+.nav-logout{color:var(--red)!important}
 
-.nav-section-label{
-  font-size:8px;
-  color:#4e7069;
-  margin:15px 5px 7px;
-  letter-spacing:2px;
-}
+/* CONTAINER & HERO CARD */
+.container{width:100%;max-width:1100px;margin:auto;padding:20px 16px}
+.hero{position:relative;overflow:hidden;padding:28px 24px;border-radius:26px;color:#fff;background:linear-gradient(135deg, #0d8a4d 0%, #055431 100%);box-shadow:0 14px 32px rgba(13,138,77,.28);margin-bottom:20px}
+.hero::after{content:'';position:absolute;right:-30px;bottom:-30px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,0.06);pointer-events:none}
+.hero-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.hero-label{color:rgba(255,255,255,.8);font-size:11px;font-weight:700;letter-spacing:1px}
+.eye-toggle{color:rgba(255,255,255,.8);font-size:16px;padding:4px}
+.hero-balance{font-size:36px;font-weight:900;letter-spacing:-0.03em;word-break:break-word;margin-bottom:4px}
+.hero-email{color:rgba(255,255,255,.75);font-size:12px;font-weight:500}
+.hero-system{display:flex;gap:18px;margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,.15);flex-wrap:wrap}
+.system-item{font-size:11px;color:rgba(255,255,255,.75);font-weight:500}
+.system-item span{color:#fff;font-weight:800}
 
-.nav-list{
-  display:flex;
-  flex-direction:column;
-  gap:5px;
-}
+/* SECTIONS & CARDS */
+.section{margin-top:26px}
+.section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:8px}
+.section-title h3{font-size:16px;font-weight:800;letter-spacing:-0.02em}
+.period-tabs{display:flex;gap:4px;padding:4px;border-radius:14px;background:var(--track)}
+.period-tabs button{border-radius:10px;padding:6px 12px;font-size:12px;font-weight:700;color:var(--muted)}
+.period-tabs button.active{background:var(--surface);color:var(--green2);box-shadow:0 2px 6px rgba(0,0,0,0.08)}
 
-.nav-item{
-  width:100%;
-  display:flex;
-  align-items:center;
-  gap:11px;
-  border:1px solid transparent;
-  background:transparent;
-  color:#a9c1bb;
-  padding:11px 12px;
-  border-radius:10px;
-  text-align:left;
-  font-size:11px;
-  transition:.2s;
-}
+.loading,.empty{padding:28px 12px;text-align:center;color:var(--muted);font-size:13px;font-weight:600;grid-column:1/-1}
+.empty .secondary-btn{margin-top:4px;padding:10px 16px}
 
-.nav-item:hover,
-.nav-item.active{
-  color:var(--green);
-  background:rgba(32,255,154,.055);
-  border-color:rgba(32,255,154,.12);
-}
-
-.nav-item .nav-icon{
-  width:22px;
-  text-align:center;
-}
-
-.nav-bottom{
-  margin-top:22px;
-  padding-top:15px;
-  border-top:1px solid rgba(32,255,154,.1);
-}
-
-.nav-logout{color:var(--red)}
-
-/* MAIN */
-
-.container{
-  width:100%;
-  max-width:1100px;
-  margin:auto;
-  padding:18px 15px;
-}
-
-.hero,.section{scroll-margin-top:80px}
-
-.hero{
-  padding:23px;
-  border-radius:22px;
-  border:1px solid rgba(32,255,154,.18);
-  background:#000000;
-  box-shadow:var(--shadow),var(--glow);
-  margin-bottom:18px;
-  position:relative;
-  overflow:hidden;
-}
-
-.hero::before{
-  content:"";
-  position:absolute;
-  top:0;
-  left:0;
-  width:100%;
-  height:2px;
-  background:linear-gradient(90deg,var(--green),var(--cyan),transparent);
-}
-
-.hero::after{
-  content:"SECURE FINANCIAL NODE";
-  position:absolute;
-  top:14px;
-  right:16px;
-  color:var(--green);
-  font-size:7px;
-  letter-spacing:1px;
-  opacity:.65;
-}
-
-.hero-label{
-  color:#71948b;
-  font-size:9px;
-  margin-bottom:8px;
-  text-transform:uppercase;
-  letter-spacing:2px;
-}
-
-.hero-balance{
-  font-size:34px;
-  font-weight:900;
-  color:var(--green);
-  text-shadow:0 0 18px rgba(32,255,154,.18);
-  word-break:break-word;
-}
-
-.hero-email{
-  color:var(--muted);
-  font-size:9px;
-  margin-top:9px;
-  word-break:break-all;
-}
-
-.hero-system{
-  display:flex;
-  gap:14px;
-  margin-top:17px;
-  padding-top:12px;
-  border-top:1px solid rgba(32,255,154,.08);
-}
-
-.system-item{
-  font-size:7px;
-  color:#5c7973;
-  letter-spacing:1px;
-}
-
-.system-item span{color:var(--green)}
-
-.section{margin-top:22px}
-
-.section-title{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:12px;
-}
-
-.section-title h3{
-  font-size:13px;
-  letter-spacing:.5px;
-}
-
-.section-title h3::before{
-  content:"// ";
-  color:var(--green);
-}
-
-.period-tabs{
-  display:flex;
-  gap:3px;
-  padding:3px;
-  border-radius:10px;
-  background:rgba(255,255,255,.025);
-  border:1px solid rgba(32,255,154,.08);
-}
-
-.period-tabs button{
-  border:0;
-  background:transparent;
-  color:var(--muted);
-  border-radius:7px;
-  padding:6px 9px;
-  font-size:9px;
-}
-
-.period-tabs button.active{
-  background:rgba(32,255,154,.12);
-  color:var(--green);
-}
-
-.summary-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
-}
-
-.summary-card{
-  border:1px solid rgba(32,255,154,.1);
-  background:#000000;
-  border-radius:16px;
-  padding:15px;
-  position:relative;
-  overflow:hidden;
-}
-
-.summary-card::before{
-  content:"";
-  position:absolute;
-  left:0;
-  top:0;
-  width:2px;
-  height:100%;
-  background:var(--green);
-  opacity:.6;
-}
-
-.summary-card .emoji{
-  font-size:17px;
-  margin-bottom:10px;
-}
-
-.summary-card small{
-  display:block;
-  color:var(--muted);
-  font-size:8px;
-  margin-bottom:6px;
-  text-transform:uppercase;
-}
-
-.summary-card strong{font-size:15px}
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.summary-card{background:var(--card);border-radius:20px;padding:16px;box-shadow:var(--shadow);border:1px solid var(--border);min-width:0}
+.summary-card .emoji{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:12px}
+.summary-card small{display:block;color:var(--muted);font-size:12px;font-weight:600;margin-bottom:4px}
+.summary-card strong{font-size:16px;font-weight:800;letter-spacing:-0.02em;word-break:break-word}
+.summary-card.income .emoji{background:var(--greenbg);color:var(--green)}
+.summary-card.expense .emoji{background:var(--redbg);color:var(--red)}
+.summary-card.net .emoji{background:var(--bluebg);color:var(--blue)}
+.summary-card.transfer .emoji{background:var(--yellowbg);color:var(--yellow)}
 .income strong{color:var(--green)}
 .expense strong{color:var(--red)}
-.net strong{color:var(--cyan)}
+.net strong{color:var(--blue)}
 .transfer strong{color:var(--yellow)}
 
-.accounts{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:11px;
-}
+/* ACCOUNTS GRID */
+.accounts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.account-card{background:var(--card);border-radius:20px;padding:18px;box-shadow:var(--shadow);border:1px solid var(--border);display:flex;flex-direction:column;justify-content:space-between;min-width:0}
+.account-top{display:flex;justify-content:space-between;align-items:center}
+.account-icon{width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:var(--greenbg);font-size:20px}
+.account-menu{color:var(--faint);font-size:20px;padding:4px 10px}
+.account-name{margin-top:14px;font-weight:800;font-size:15px;letter-spacing:-0.01em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.account-type{color:var(--muted);font-size:12px;font-weight:500;margin-top:2px}
+.account-balance{margin-top:12px;font-size:18px;font-weight:900;color:var(--green);letter-spacing:-0.02em;word-break:break-word}
+.add-account{display:flex;align-items:center;justify-content:center;min-height:140px;border:2px dashed var(--border2);border-radius:20px;color:var(--green2);font-weight:800;font-size:13px;transition:.2s}
+.add-account:hover{background:var(--greenbg);border-color:var(--green)}
 
-.account-card{
-  position:relative;
-  border:1px solid rgba(32,255,154,.1);
-  background:#000000;
-  border-radius:17px;
-  padding:16px;
-  min-height:140px;
-  overflow:hidden;
-}
+/* QUICK ACTIONS */
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.action-btn{padding:18px 12px;border-radius:20px;background:var(--card);box-shadow:var(--shadow);border:1px solid var(--border);text-align:center}
+.action-btn .action-icon{font-size:24px;margin-bottom:8px;color:var(--green)}
+.action-btn strong{display:block;font-size:13px;font-weight:800}
+.action-btn small{color:var(--muted);font-size:11px}
 
-.account-top{
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-}
-
-.account-icon{
-  width:40px;
-  height:40px;
-  border-radius:12px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:rgba(32,255,154,.06);
-  border:1px solid rgba(32,255,154,.1);
-  font-size:18px;
-}
-
-.account-menu{
-  border:0;
-  background:transparent;
-  color:#57756e;
-  font-size:19px;
-}
-
-.account-name{
-  margin-top:13px;
-  font-weight:800;
-  font-size:12px;
-}
-
-.account-type{
-  color:var(--muted);
-  font-size:8px;
-  margin-top:4px;
-}
-
-.account-balance{
-  margin-top:10px;
-  font-size:16px;
-  font-weight:900;
-  color:var(--green);
-  word-break:break-word;
-}
-
-.add-account{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  min-height:140px;
-  border:1px dashed rgba(32,255,154,.3);
-  background:rgba(32,255,154,.025);
-  color:var(--green);
-  font-weight:800;
-  border-radius:17px;
-  transition:.2s;
-}
-
-.actions{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-}
-
-.action-btn{
-  border:1px solid rgba(32,255,154,.1);
-  border-radius:16px;
-  padding:16px 10px;
-  background:#000000;
-  color:white;
-  text-align:center;
-}
-
-.action-btn .action-icon{
-  font-size:22px;
-  margin-bottom:7px;
-}
-
-.action-btn strong{
-  display:block;
-  font-size:10px;
-}
-
-.action-btn small{
-  color:var(--muted);
-  font-size:8px;
-}
-
-.transaction-list{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-
-.transaction{
-  display:flex;
-  align-items:center;
-  gap:11px;
-  padding:12px;
-  border:1px solid rgba(32,255,154,.08);
-  border-radius:14px;
-  background:#000000;
-  cursor:pointer;
-}
-
-.transaction-icon{
-  width:40px;
-  height:40px;
-  flex-shrink:0;
-  border-radius:11px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.transaction-icon.income{
-  background:rgba(32,255,154,.07);
-  color:var(--green);
-}
-
-.transaction-icon.expense{
-  background:rgba(255,73,109,.07);
-  color:var(--red);
-}
-
-.transaction-icon.transfer{
-  background:rgba(255,209,102,.07);
-  color:var(--yellow);
-}
-
-.transaction-info{
-  min-width:0;
-  flex:1;
-}
-
-.transaction-info strong{
-  display:block;
-  overflow:hidden;
-  white-space:nowrap;
-  text-overflow:ellipsis;
-  font-size:10px;
-}
-
-.transaction-info small{
-  color:var(--muted);
-  display:block;
-  margin-top:4px;
-  font-size:7px;
-}
-
-.transaction-amount{
-  text-align:right;
-  white-space:nowrap;
-}
-
-.transaction-amount strong{
-  display:block;
-  font-size:10px;
-}
-
-.transaction-amount small{
-  color:#4c6c64;
-  font-size:7px;
-}
-
+/* TRANSACTIONS LIST */
+.transaction-list{display:flex;flex-direction:column;gap:10px}
+.transaction{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:18px;background:var(--card);box-shadow:var(--shadow);border:1px solid var(--border);transition:.15s;cursor:pointer}
+.transaction:hover{border-color:var(--border2)}
+.transaction-icon{width:44px;height:44px;flex-shrink:0;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px}
+.transaction-icon.income{background:var(--greenbg);color:var(--green)}
+.transaction-icon.expense{background:var(--redbg);color:var(--red)}
+.transaction-icon.transfer{background:var(--yellowbg);color:var(--yellow)}
+.transaction-info{min-width:0;flex:1}
+.transaction-info strong{display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:14px;font-weight:700}
+.transaction-info small{color:var(--muted);display:block;margin-top:2px;font-size:12px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.transaction-amount{text-align:right;white-space:nowrap}
+.transaction-amount strong{display:block;font-size:15px;font-weight:800}
+.transaction-amount small{color:var(--faint);font-size:10px;font-weight:700}
 .amount-income{color:var(--green)}
 .amount-expense{color:var(--red)}
 .amount-transfer{color:var(--yellow)}
 
-.empty{
-  text-align:center;
-  color:#526f68;
-  padding:25px;
-  border:1px dashed rgba(32,255,154,.12);
-  border-radius:15px;
-  font-size:10px;
-}
+/* DEBTS PANEL */
+.debts-panel{position:fixed;inset:0;z-index:85;background:var(--bg);overflow-y:auto}
+.debts-bar{position:sticky;top:0;z-index:10;padding:12px 18px;background:var(--topbar);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.debts-bar-inner{max-width:1100px;margin:auto;display:flex;align-items:center;gap:10px}
+.debts-bar-inner h3{flex:1;font-size:18px;font-weight:800}
+.debts-bar-inner .secondary-btn{padding:9px 12px;font-size:12px}
+.debts-panel-body{max-width:1100px;margin:auto;padding:10px 16px 60px}
+.debt-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.debt-bar select{width:auto}
 
-.report-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:11px;
-}
+.debt-summary{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.debt-sum{background:var(--card);border-radius:20px;padding:18px;box-shadow:var(--shadow);border:1px solid var(--border);border-top:4px solid var(--border);min-width:0}
+.debt-sum.recv{border-top-color:var(--green)}
+.debt-sum.pay{border-top-color:var(--red)}
+.debt-sum small{display:block;color:var(--muted);font-size:12px;font-weight:600;margin-bottom:6px}
+.debt-sum strong{font-size:18px;font-weight:900;word-break:break-word}
+.debt-sum.recv strong{color:var(--green)}
+.debt-sum.pay strong{color:var(--red)}
+.debt-sum em{display:block;font-style:normal;color:var(--muted);font-size:12px;margin-top:4px}
 
-.report-card{
-  border:1px solid rgba(32,255,154,.09);
-  background:#000000;
-  border-radius:17px;
-  padding:16px;
-}
+.debt-card{background:var(--card);border-radius:22px;padding:18px;box-shadow:var(--shadow);border:1px solid var(--border);border-left:5px solid var(--border);margin-bottom:12px}
+.debt-card.recv{border-left-color:var(--green)}
+.debt-card.pay{border-left-color:var(--red)}
+.debt-head{display:flex;align-items:center;gap:12px}
+.debt-avatar{width:44px;height:44px;flex-shrink:0;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px}
+.debt-card.recv .debt-avatar{background:var(--greenbg);color:var(--green)}
+.debt-card.pay .debt-avatar{background:var(--redbg);color:var(--red)}
+.debt-who{min-width:0;flex:1}
+.debt-who strong{display:block;font-size:15px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.debt-who small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.badge{font-size:10px;font-weight:800;padding:4px 10px;border-radius:20px;letter-spacing:.3px;white-space:nowrap}
+.badge.open{color:var(--yellow);background:var(--yellowbg)}
+.badge.paid{color:var(--green2);background:var(--greenbg)}
+.badge.late{color:var(--red);background:var(--redbg)}
+.debt-amounts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.debt-amounts div{padding:10px 12px;border-radius:12px;background:var(--bg);min-width:0}
+.debt-amounts small{display:block;color:var(--muted);font-size:10px;font-weight:700;margin-bottom:2px}
+.debt-amounts strong{font-size:13px;font-weight:800;word-break:break-word}
+.debt-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.debt-actions button{border-radius:12px;padding:10px 14px;font-size:12px;border:1px solid var(--border2);background:var(--surface);color:var(--text);font-weight:700}
+.debt-actions .pay-btn{background:var(--green);color:#fff;border-color:var(--green)}
+.debt-actions .del{color:var(--red);border-color:var(--dangerborder);background:var(--redbg)}
+.debt-actions .grow{flex:1}
 
-.report-card h4{
-  margin-bottom:14px;
-  font-size:11px;
-}
-
-.chart{
-  min-height:205px;
-  display:flex;
-  align-items:flex-end;
-  gap:6px;
-  padding:20px 7px 4px;
-  border-bottom:1px solid rgba(32,255,154,.08);
-}
-
-.bar-wrap{
-  flex:1;
-  height:165px;
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-end;
-  align-items:center;
-  gap:4px;
-}
-
-.bar{
-  width:100%;
-  max-width:25px;
-  min-height:2px;
-  border-radius:5px 5px 2px 2px;
-}
-
+/* ANALYTICS & REPORTS */
+.report-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.report-card{background:var(--card);border-radius:22px;padding:18px;box-shadow:var(--shadow);border:1px solid var(--border);min-width:0}
+.report-card h4{margin-bottom:14px;font-size:14px;font-weight:800}
+.chart{min-height:190px;display:flex;align-items:flex-end;gap:6px;padding:20px 4px 4px;border-bottom:1px solid var(--border);overflow-x:auto}
+.bar-wrap{flex:1 0 26px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bar-pair{height:140px;display:flex;align-items:flex-end;gap:2px}
+.bar{width:9px;min-height:3px;border-radius:5px 5px 2px 2px}
 .bar.income{background:var(--green)}
 .bar.expense{background:var(--red)}
-
-.bar-label{
-  color:#526f68;
-  font-size:7px;
-}
-
-.chart-legend{
-  display:flex;
-  justify-content:center;
-  gap:16px;
-  margin-top:10px;
-  color:var(--muted);
-  font-size:8px;
-}
-
-.dot{
-  display:inline-block;
-  width:7px;
-  height:7px;
-  border-radius:50%;
-  margin-right:4px;
-}
-
+.bar-label{color:var(--faint);font-size:9px;font-weight:700}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
 .dot.income{background:var(--green)}
 .dot.expense{background:var(--red)}
+.progress{height:8px;border-radius:20px;overflow:hidden;background:var(--track)}
+.progress span{display:block;height:100%;border-radius:20px;background:linear-gradient(90deg,var(--green),#34d399)}
+.perf-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-.performance{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-
-.performance-row{
-  display:grid;
-  grid-template-columns:90px 1fr 78px;
-  align-items:center;
-  gap:8px;
-  font-size:8px;
-}
-
-.progress{
-  height:6px;
-  border-radius:20px;
-  overflow:hidden;
-  background:rgba(255,255,255,.04);
-}
-
-.progress span{
-  display:block;
-  height:100%;
-  border-radius:20px;
-  background:linear-gradient(90deg,var(--green2),var(--cyan));
-}
-
-.stats-mini{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
-}
-
-.mini{
-  padding:12px;
-  border-radius:12px;
-  background:rgba(255,255,255,.025);
-  border:1px solid rgba(32,255,154,.07);
-}
-
-.mini small{
-  color:var(--muted);
-  display:block;
-  margin-bottom:5px;
-  font-size:7px;
-}
-
-.mini strong{font-size:12px}
-
-.trend-list{
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-}
-
-.trend-row{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  padding:9px 0;
-  border-bottom:1px solid rgba(32,255,154,.07);
-}
-
-.trend-row:last-child{border-bottom:0}
-
-.trend-row small{
-  color:var(--muted);
-  font-size:7px;
-}
-
-.rate-box{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:9px;
-}
-
-.rate{
-  padding:14px;
-  border-radius:13px;
-  background:rgba(255,255,255,.025);
-  border:1px solid rgba(32,255,154,.07);
-}
-
-.rate small{
-  color:var(--muted);
-  display:block;
-  margin-bottom:6px;
-  font-size:7px;
-}
-
-.rate strong{
-  font-size:21px;
-  color:var(--green);
-}
-
-.pdf-card{
-  border:1px solid rgba(0,229,255,.16);
-  background:linear-gradient(135deg,rgba(0,229,255,.045),rgba(5,20,24,.75));
-  border-radius:18px;
-  padding:18px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-}
-
-.pdf-info h4{
-  font-size:12px;
-  margin-bottom:5px;
-}
-
-.pdf-info p{
-  color:var(--muted);
-  font-size:8px;
-}
-
-.pdf-btn{
-  width:auto;
-  min-width:135px;
-  white-space:nowrap;
-}
-
-/* FOOTER */
-
-.app-footer{
-  max-width:1100px;
-  margin:30px auto 0;
-  padding:16px 15px 4px;
-  text-align:center;
-  border-top:1px solid rgba(32,255,154,.08);
-}
-
-.app-footer p{
-  color:#4c6c64;
-  font-size:8px;
-  letter-spacing:1px;
-}
-
-.app-footer span{
-  color:var(--green);
-}
+/* PDF */
+.pdf-card{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;background:var(--card);border:1px solid var(--border);border-radius:22px;padding:20px;box-shadow:var(--shadow)}
+.pdf-info{flex:1;min-width:200px}
+.pdf-info h4{font-size:14px;font-weight:800;margin-bottom:4px}
+.pdf-info p{color:var(--muted);font-size:12px;line-height:1.5}
+.pdf-btn{width:auto;padding:14px 22px}
 
 /* MODALS */
+.modal{position:fixed;inset:0;z-index:100;background:var(--overlay);backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center}
+.modal-box{width:100%;max-width:520px;max-height:90vh;overflow-y:auto;padding:24px;border-radius:28px 28px 0 0;background:var(--surface);box-shadow:0 -10px 40px rgba(0,0,0,0.2)}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:10px}
+.modal-head h3{font-size:17px;font-weight:800}
+.close-btn{width:36px;height:36px;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:12px;font-size:18px;display:flex;align-items:center;justify-content:center}
+.form-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+.secondary-btn,.danger-btn{border-radius:14px;padding:13px;font-weight:700}
+.secondary-btn{border:1px solid var(--border2);background:var(--surface);color:var(--text)}
+.danger-btn{border:1px solid var(--dangerborder);background:var(--redbg);color:var(--red)}
+.pay-info{padding:12px;border-radius:14px;background:var(--greenbg);margin-bottom:15px;line-height:1.6}
+.fill-btn{margin-top:8px;padding:8px 12px;border-radius:10px;background:var(--greenbg);color:var(--green2);font-weight:700}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(100px);z-index:300;background:var(--toast-bg);color:var(--toast-text);padding:12px 20px;border-radius:14px;box-shadow:0 10px 25px rgba(0,0,0,0.2);transition:.25s;max-width:90%;text-align:center;font-size:13px;font-weight:700}
+.toast.show{transform:translateX(-50%) translateY(0)}
 
-.modal{
-  position:fixed;
-  inset:0;
-  z-index:100;
-  background:rgba(0,0,0,.72);
-  backdrop-filter:blur(8px);
-  display:flex;
-  align-items:flex-end;
-  justify-content:center;
-}
-
-.modal-box{
-  width:100%;
-  max-width:550px;
-  max-height:92vh;
-  overflow:auto;
-  padding:22px;
-  border-radius:22px 22px 0 0;
-  background:#000000;
-  border:1px solid rgba(32,255,154,.15);
-}
-
-.modal-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:18px;
-}
-
-.modal-head h3{font-size:14px}
-
-.close-btn{
-  width:37px;
-  height:37px;
-  border:1px solid rgba(255,255,255,.08);
-  background:rgba(255,255,255,.035);
-  color:white;
-  border-radius:11px;
-}
-
-.form-actions{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:9px;
-  margin-top:18px;
-}
-
-.secondary-btn,
-.danger-btn{
-  border-radius:12px;
-  padding:13px;
-}
-
-.secondary-btn{
-  border:1px solid rgba(32,255,154,.1);
-  background:rgba(255,255,255,.035);
-  color:white;
-}
-
-.danger-btn{
-  border:1px solid rgba(255,73,109,.22);
-  background:rgba(255,73,109,.06);
-  color:#ff7189;
-}
-
-.toast{
-  position:fixed;
-  left:50%;
-  bottom:20px;
-  transform:translateX(-50%) translateY(100px);
-  z-index:300;
-  background:#000000;
-  border:1px solid rgba(32,255,154,.22);
-  color:var(--green);
-  padding:11px 16px;
-  border-radius:11px;
-  box-shadow:0 0 25px rgba(32,255,154,.1);
-  transition:.25s;
-  max-width:90%;
-  text-align:center;
-  font-size:9px;
-}
-
-.toast.show{
-  transform:translateX(-50%) translateY(0);
-}
-
-.loading{
-  text-align:center;
-  padding:30px;
-  color:var(--green);
-  font-size:10px;
-}
-
-/* MOBILE */
+/* FOOTER */
+.app-footer{max-width:1100px;margin:40px auto 0;padding:20px 16px;text-align:center;border-top:1px solid var(--border)}
+.app-footer p{color:var(--faint);font-size:12px;font-weight:500}
+.app-footer span{color:var(--green2);font-weight:700}
 
 @media(max-width:800px){
   .summary-grid{grid-template-columns:repeat(2,1fr)}
   .accounts{grid-template-columns:repeat(2,1fr)}
   .report-grid{grid-template-columns:1fr}
 }
-
 @media(max-width:520px){
-  .container{padding:15px 11px}
-  .hero{padding:20px}
-  .hero-balance{font-size:27px}
-  .hero-system{gap:9px;flex-wrap:wrap}
-  .summary-card{padding:13px}
-  .summary-card strong{font-size:14px}
+  .container{padding:16px 12px}
+  .hero{padding:22px 18px}
+  .hero-balance{font-size:30px}
   .accounts{grid-template-columns:1fr 1fr}
-  .account-card{min-height:135px}
-  .actions{grid-template-columns:repeat(3,1fr)}
-  .action-btn{padding:13px 5px}
-  .action-btn .action-icon{font-size:20px}
-  .transaction{padding:10px}
-  .transaction-amount strong{font-size:9px}
-  .stats-mini{grid-template-columns:1fr}
-  .section-title{align-items:flex-start}
-  .pdf-card{align-items:flex-start;flex-direction:column}
-  .pdf-btn{width:100%}
+  .debt-sum strong{font-size:16px}
+  .top-actions{gap:6px}
+  .icon-btn{width:36px;height:36px}
 }
-
-@media(max-width:360px){
+@media(max-width:380px){
   .accounts{grid-template-columns:1fr}
-  .summary-grid{grid-template-columns:1fr 1fr}
-  .brand small{display:none}
+  .debt-amounts{grid-template-columns:1fr}
 }
 </style>
 </head>
 
 <body>
 
-<!-- ================= LOGIN ================= -->
-
+<!-- LOGIN -->
 <div id="loginScreen">
-
+  <button class="icon-btn theme-btn theme-float" style="position:absolute;top:16px;right:16px" title="Mandhari" onclick="toggleTheme()">🌙</button>
   <div class="login-card">
-
     <div class="logo">GW</div>
-
     <h1>GODEN WALLET</h1>
-
-    <p>PRIVATE CYBER FINANCE SYSTEM</p>
+    <p>Simamia mfumo wako wa fedha kwa urahisi</p>
 
     <div class="field">
       <label>Email</label>
-
-      <input
-        id="loginEmail"
-        type="email"
-        value="godenvegula@gmail.com"
-        readonly>
+      <input id="loginEmail" type="email" value="godenvegula@gmail.com" readonly>
     </div>
 
     <div class="field">
-
       <label>Password</label>
-
       <div class="input-wrap">
-
-        <input
-          id="loginPassword"
-          type="password"
-          placeholder="Ingiza password">
-
-        <button
-          class="password-toggle"
-          type="button"
-          onclick="togglePassword()">
-          👁
-        </button>
-
+        <input id="loginPassword" type="password" placeholder="Ingiza password">
+        <button class="password-toggle" type="button" onclick="togglePassword()">👁</button>
       </div>
-
     </div>
 
-    <button
-      id="loginBtn"
-      class="primary-btn"
-      onclick="login()">
-
-      LOGIN TO WALLET
-
-    </button>
-
+    <button id="loginBtn" class="primary-btn" onclick="login()">Ingia Mfomoni</button>
     <div id="loginError" class="login-error"></div>
-
   </div>
-
 </div>
 
-
-<!-- ================= APP ================= -->
-
+<!-- APP MAIN -->
 <div id="app" class="hidden">
 
-  <!-- TOP BAR -->
-
   <header class="topbar">
-
     <div class="topbar-inner">
-
       <div class="brand">
-
         <div class="brand-logo">GW</div>
-
         <div>
           <h2>GODEN WALLET</h2>
-          <small>PERSONAL FINANCE // ONLINE</small>
+          <small>Fedha binafsi</small>
         </div>
-
       </div>
-
       <div class="top-actions">
-
-        <button
-          class="icon-btn"
-          title="PDF"
-          onclick="exportPDF()">
-          📄
-        </button>
-
-        <button
-          class="icon-btn"
-          title="Notebook Navigator"
-          onclick="toggleNavigator()">
-          ☰
-        </button>
-
-        <button
-          class="icon-btn logout"
-          title="Logout"
-          onclick="logout()">
-          ⎋
-        </button>
-
+        <button class="icon-btn theme-btn" title="Mandhari" onclick="toggleTheme()">🌙</button>
+        <button class="icon-btn" title="Madeni" onclick="openDebts()">🤝</button>
+        <button class="icon-btn" title="PDF" onclick="exportPDF()">📄</button>
+        <button class="icon-btn" title="Menyu" onclick="toggleNavigator()">☰</button>
+        <button class="icon-btn logout" title="Logout" onclick="logout()">⎋</button>
       </div>
-
     </div>
-
   </header>
 
+  <div id="navOverlay" class="nav-overlay" onclick="closeNavigator()"></div>
 
-  <!-- NAV OVERLAY -->
-
-  <div
-    id="navOverlay"
-    class="nav-overlay"
-    onclick="closeNavigator()">
-  </div>
-
-
-  <!-- NOTEBOOK NAVIGATOR -->
-
+  <!-- SIDEBAR MENU -->
   <aside id="notebookNav" class="notebook-nav">
-
-    <button
-      class="nav-close"
-      onclick="closeNavigator()">
-      ×
-    </button>
-
     <div class="nav-head">
-
       <div class="nav-title">
-
-        <div class="nav-terminal">
-          GW
-        </div>
-
+        <div class="nav-terminal">GW</div>
         <div>
-          <h3>NOTEBOOK NAVIGATOR</h3>
-          <small>GODEN WALLET // SYSTEM</small>
+          <h3>Menyu Kuu</h3>
+          <small>Goden Wallet</small>
         </div>
-
       </div>
-
+      <button class="nav-close" onclick="closeNavigator()">×</button>
     </div>
 
     <div class="nav-status">
-
-      <div class="status-line">
-        <span>USER</span>
-        <span id="navUser">GODEN</span>
-      </div>
-
-      <div class="status-line">
-        <span>STATUS</span>
-        <span class="status-online">● ONLINE</span>
-      </div>
-
-      <div class="status-line">
-        <span>DATABASE</span>
-        <span class="status-online">FIRESTORE</span>
-      </div>
-
+      <div class="status-line"><span>USER</span><span id="navUser">GODEN</span></div>
+      <div class="status-line"><span>STATUS</span><span class="status-online">● ONLINE</span></div>
+      <div class="status-line"><span>DATABASE</span><span class="status-online">FIRESTORE</span></div>
     </div>
 
-
-    <div class="nav-section-label">
-      MAIN
-    </div>
-
+    <div class="nav-section-label">MAIN MENU</div>
     <div class="nav-list">
-
-      <button
-        class="nav-item active"
-        onclick="goToSection('dashboardSection',this)">
-        <span class="nav-icon">⌂</span>
-        Dashboard
-      </button>
-
-      <button
-        class="nav-item"
-        onclick="goToSection('summarySection',this)">
-        <span class="nav-icon">◈</span>
-        Summary
-      </button>
-
-      <button
-        class="nav-item"
-        onclick="goToSection('accountsSection',this)">
-        <span class="nav-icon">▣</span>
-        Accounts
-      </button>
-
+      <button class="nav-item active" onclick="goToSection('dashboardSection',this)"><span class="nav-icon">⌂</span>Dashboard</button>
+      <button class="nav-item" onclick="goToSection('summarySection',this)"><span class="nav-icon">◈</span>Financial Summary</button>
+      <button class="nav-item" onclick="goToSection('accountsSection',this)"><span class="nav-icon">▣</span>Accounts</button>
     </div>
 
-
-    <div class="nav-section-label">
-      TRANSACTIONS
-    </div>
-
+    <div class="nav-section-label">TRANSACTIONS</div>
     <div class="nav-list">
-
-      <button
-        class="nav-item"
-        onclick="openTransactionModal('income')">
-        <span class="nav-icon">＋</span>
-        Income
-      </button>
-
-      <button
-        class="nav-item"
-        onclick="openTransactionModal('expense')">
-        <span class="nav-icon">−</span>
-        Expense
-      </button>
-
-      <button
-        class="nav-item"
-        onclick="openTransactionModal('transfer')">
-        <span class="nav-icon">⇄</span>
-        Transfer
-      </button>
-
-      <button
-        class="nav-item"
-        onclick="goToSection('transactionsSection',this)">
-        <span class="nav-icon">☷</span>
-        Transactions
-      </button>
-
+      <button class="nav-item" onclick="openTransactionModal('income')"><span class="nav-icon">＋</span>Ongeza Income</button>
+      <button class="nav-item" onclick="openTransactionModal('expense')"><span class="nav-icon">−</span>Ongeza Expense</button>
+      <button class="nav-item" onclick="openTransactionModal('transfer')"><span class="nav-icon">⇄</span>Hamisha Transfer</button>
+      <button class="nav-item" onclick="goToSection('transactionsSection',this)"><span class="nav-icon">☷</span>Recent History</button>
     </div>
 
-
-    <div class="nav-section-label">
-      ANALYTICS
-    </div>
-
+    <div class="nav-section-label">MADENI</div>
     <div class="nav-list">
-
-      <button
-        class="nav-item"
-        onclick="goToSection('reportsSection',this)">
-        <span class="nav-icon">▥</span>
-        Reports
+      <button class="nav-item" onclick="openDebts('receivable')">
+        <span class="nav-icon">↑</span>Ninayodai
+        <span id="navBadgeRecv" class="nav-badge">0</span>
       </button>
-
-      <button
-        class="nav-item"
-        onclick="goToSection('pdfSection',this)">
-        <span class="nav-icon">▤</span>
-        PDF Export
+      <button class="nav-item" onclick="openDebts('payable')">
+        <span class="nav-icon">↓</span>Ninayodaiwa
+        <span id="navBadgePay" class="nav-badge red">0</span>
       </button>
-
+      <button class="nav-item" onclick="openDebtModal()"><span class="nav-icon">＋</span>Ongeza Deni</button>
     </div>
 
+    <div class="nav-section-label">ANALYTICS & REPORTS</div>
+    <div class="nav-list">
+      <button class="nav-item" onclick="goToSection('reportsSection',this)"><span class="nav-icon">▥</span>Reports & Analytics</button>
+      <button class="nav-item" onclick="goToSection('pdfSection',this)"><span class="nav-icon">▤</span>Export PDF</button>
+    </div>
 
     <div class="nav-bottom">
-
-      <button
-        class="nav-item nav-logout"
-        onclick="logout()">
-        <span class="nav-icon">⎋</span>
-        Logout
-      </button>
-
+      <button class="nav-item nav-logout" onclick="logout()"><span class="nav-icon">⎋</span>Logout Account</button>
     </div>
-
   </aside>
 
-
-  <!-- ================= MAIN ================= -->
-
+  <!-- CONTAINER -->
   <main class="container">
 
-
-    <!-- DASHBOARD -->
-
+    <!-- HERO DASHBOARD -->
     <section id="dashboardSection" class="hero section">
-
-      <div class="hero-label">
-        TOTAL WALLET BALANCE
+      <div class="hero-top">
+        <div class="hero-label">TOTAL WALLET BALANCE</div>
+        <button class="eye-toggle" onclick="toggleBalanceVisibility()" id="balanceEye">👁</button>
       </div>
-
-      <div id="heroBalance" class="hero-balance">
-        TZS 0
-      </div>
-
-      <div id="heroEmail" class="hero-email">
-        --
-      </div>
-
+      <div id="heroBalance" class="hero-balance">TZS 0</div>
+      <div id="heroEmail" class="hero-email">--</div>
       <div class="hero-system">
-
-        <div class="system-item">
-          ACCOUNTS:
-          <span id="heroAccounts">0</span>
-        </div>
-
-        <div class="system-item">
-          TRANSACTIONS:
-          <span id="heroTransactions">0</span>
-        </div>
-
-        <div class="system-item">
-          SECURITY:
-          <span>ACTIVE</span>
-        </div>
-
+        <div class="system-item">ACCOUNTS: <span id="heroAccounts">0</span></div>
+        <div class="system-item">TRANSACTIONS: <span id="heroTransactions">0</span></div>
+        <div class="system-item">DEBTS: <span id="heroDebts">0</span></div>
+        <div class="system-item">USALAMA: <span>SALAMA</span></div>
       </div>
-
     </section>
-
 
     <!-- SUMMARY -->
-
-    <section
-      id="summarySection"
-      class="section">
-
+    <section id="summarySection" class="section">
       <div class="section-title">
-
         <h3>FINANCIAL SUMMARY</h3>
-
         <div class="period-tabs">
-
-          <button
-            id="sumAll"
-            class="active"
-            onclick="setSummaryPeriod('all')">
-            ALL
-          </button>
-
-          <button
-            id="sumMonth"
-            onclick="setSummaryPeriod('month')">
-            MONTH
-          </button>
-
-          <button
-            id="sumToday"
-            onclick="setSummaryPeriod('today')">
-            TODAY
-          </button>
-
+          <button id="sumAll" class="active" onclick="setSummaryPeriod('all')">ALL</button>
+          <button id="sumMonth" onclick="setSummaryPeriod('month')">MONTH</button>
+          <button id="sumToday" onclick="setSummaryPeriod('today')">TODAY</button>
         </div>
-
       </div>
-
-
       <div class="summary-grid">
-
-        <div class="summary-card income">
-
-          <div class="emoji">↑</div>
-
-          <small>Income</small>
-
-          <strong id="sumIncome">
-            TZS 0
-          </strong>
-
-        </div>
-
-
-        <div class="summary-card expense">
-
-          <div class="emoji">↓</div>
-
-          <small>Expense</small>
-
-          <strong id="sumExpense">
-            TZS 0
-          </strong>
-
-        </div>
-
-
-        <div class="summary-card net">
-
-          <div class="emoji">◆</div>
-
-          <small>Net</small>
-
-          <strong id="sumNet">
-            TZS 0
-          </strong>
-
-        </div>
-
-
-        <div class="summary-card transfer">
-
-          <div class="emoji">⇄</div>
-
-          <small>Transfers</small>
-
-          <strong id="sumTransfer">
-            TZS 0
-          </strong>
-
-        </div>
-
+        <div class="summary-card income"><div class="emoji">↑</div><small>Income</small><strong id="sumIncome">TZS 0</strong></div>
+        <div class="summary-card expense"><div class="emoji">↓</div><small>Expense</small><strong id="sumExpense">TZS 0</strong></div>
+        <div class="summary-card net"><div class="emoji">◆</div><small>Net Balance</small><strong id="sumNet">TZS 0</strong></div>
+        <div class="summary-card transfer"><div class="emoji">⇄</div><small>Transfers</small><strong id="sumTransfer">TZS 0</strong></div>
       </div>
-
     </section>
-
 
     <!-- ACCOUNTS -->
-
-    <section
-      id="accountsSection"
-      class="section">
-
+    <section id="accountsSection" class="section">
       <div class="section-title">
-
-        <h3>ACCOUNTS</h3>
-
-        <button
-          class="secondary-btn"
-          onclick="openAccountModal()">
-          + ACCOUNT
-        </button>
-
+        <h3>MY ACCOUNTS</h3>
+        <button class="secondary-btn" onclick="openAccountModal()">+ ACCOUNT</button>
       </div>
-
-      <div id="accountsList" class="accounts">
-        <div class="loading">
-          LOADING ACCOUNTS...
-        </div>
-      </div>
-
+      <div id="accountsList" class="accounts"><div class="loading">LOADING ACCOUNTS...</div></div>
     </section>
-
 
     <!-- ACTIONS -->
-
-    <section
-      id="actionsSection"
-      class="section">
-
-      <div class="section-title">
-        <h3>QUICK ACTIONS</h3>
-      </div>
-
+    <section id="actionsSection" class="section">
+      <div class="section-title"><h3>QUICK ACTIONS</h3></div>
       <div class="actions">
-
-        <button
-          class="action-btn"
-          onclick="openTransactionModal('income')">
-
-          <div class="action-icon">↑</div>
-
-          <strong>INCOME</strong>
-
-          <small>Ongeza pesa</small>
-
-        </button>
-
-
-        <button
-          class="action-btn"
-          onclick="openTransactionModal('expense')">
-
-          <div class="action-icon">↓</div>
-
-          <strong>EXPENSE</strong>
-
-          <small>Toa pesa</small>
-
-        </button>
-
-
-        <button
-          class="action-btn"
-          onclick="openTransactionModal('transfer')">
-
-          <div class="action-icon">⇄</div>
-
-          <strong>TRANSFER</strong>
-
-          <small>Hamisha pesa</small>
-
-        </button>
-
+        <button class="action-btn" onclick="openTransactionModal('income')"><div class="action-icon">↑</div><strong>INCOME</strong><small>Ongeza pesa</small></button>
+        <button class="action-btn" onclick="openTransactionModal('expense')"><div class="action-icon">↓</div><strong>EXPENSE</strong><small>Toa pesa</small></button>
+        <button class="action-btn" onclick="openTransactionModal('transfer')"><div class="action-icon">⇄</div><strong>TRANSFER</strong><small>Hamisha pesa</small></button>
       </div>
-
     </section>
-
 
     <!-- TRANSACTIONS -->
-
-    <section
-      id="transactionsSection"
-      class="section">
-
-      <div class="section-title">
-
-        <h3>RECENT TRANSACTIONS</h3>
-
-      </div>
-
-      <div
-        id="transactionList"
-        class="transaction-list">
-
-        <div class="loading">
-          LOADING TRANSACTIONS...
-        </div>
-
-      </div>
-
+    <section id="transactionsSection" class="section">
+      <div class="section-title"><h3>RECENT TRANSACTIONS</h3></div>
+      <div id="transactionList" class="transaction-list"><div class="loading">LOADING TRANSACTIONS...</div></div>
     </section>
 
-
     <!-- REPORTS -->
-
-    <section
-      id="reportsSection"
-      class="section">
-
+    <section id="reportsSection" class="section">
       <div class="section-title">
-
         <h3>REPORTS & ANALYTICS</h3>
-
-        <select
-          id="reportPeriod"
-          onchange="renderReports()"
-          style="width:auto">
-
+        <select id="reportPeriod" onchange="renderReports()" style="width:auto;padding:8px 12px">
           <option value="7">7 DAYS</option>
           <option value="14">14 DAYS</option>
           <option value="30">30 DAYS</option>
-
         </select>
-
       </div>
-
 
       <div class="report-grid">
-
-
         <div class="report-card">
-
           <h4>INCOME VS EXPENSE</h4>
-
-          <div
-            id="incomeExpenseChart"
-            class="chart">
+          <div id="incomeExpenseChart" class="chart"></div>
+          <div class="chart-legend" style="display:flex;justify-content:center;gap:16px;margin-top:10px;font-size:12px">
+            <span><span class="dot income"></span>INCOME</span>
+            <span><span class="dot expense"></span>EXPENSE</span>
           </div>
-
-          <div class="chart-legend">
-
-            <span>
-              <span class="dot income"></span>
-              INCOME
-            </span>
-
-            <span>
-              <span class="dot expense"></span>
-              EXPENSE
-            </span>
-
-          </div>
-
         </div>
-
-
+        <div class="report-card"><h4>ACCOUNT PERFORMANCE</h4><div id="accountPerformance" class="performance" style="display:flex;flex-direction:column;gap:12px"></div></div>
+        <div class="report-card"><h4>FINANCIAL STATS (ZOTE)</h4><div id="financialStats" class="stats-mini" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px"></div></div>
+        <div class="report-card"><h4>DAILY TREND</h4><div id="dailyTrend" class="trend-list" style="display:flex;flex-direction:column;gap:6px"></div></div>
         <div class="report-card">
-
-          <h4>ACCOUNT PERFORMANCE</h4>
-
-          <div
-            id="accountPerformance"
-            class="performance">
+          <h4>FINANCIAL RATES (ZOTE)</h4>
+          <div class="rate-box" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div class="rate" style="padding:14px;border-radius:14px;background:var(--bg)"><small style="color:var(--muted)">SAVING RATE</small><br><strong id="savingRate" style="font-size:22px;color:var(--green)">0%</strong></div>
+            <div class="rate" style="padding:14px;border-radius:14px;background:var(--bg)"><small style="color:var(--muted)">EXPENSE RATE</small><br><strong id="expenseRate" style="font-size:22px;color:var(--green)">0%</strong></div>
           </div>
-
         </div>
-
-
-        <div class="report-card">
-
-          <h4>FINANCIAL STATS</h4>
-
-          <div
-            id="financialStats"
-            class="stats-mini">
-          </div>
-
-        </div>
-
-
-        <div class="report-card">
-
-          <h4>DAILY TREND</h4>
-
-          <div
-            id="dailyTrend"
-            class="trend-list">
-          </div>
-
-        </div>
-
-
-        <div class="report-card">
-
-          <h4>FINANCIAL RATES</h4>
-
-          <div class="rate-box">
-
-            <div class="rate">
-
-              <small>SAVING RATE</small>
-
-              <strong id="savingRate">
-                0%
-              </strong>
-
-            </div>
-
-            <div class="rate">
-
-              <small>EXPENSE RATE</small>
-
-              <strong id="expenseRate">
-                0%
-              </strong>
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div class="report-card">
-
-          <h4>TRANSFER STATISTICS</h4>
-
-          <div
-            id="transferStats"
-            class="trend-list">
-          </div>
-
-        </div>
-
+        <div class="report-card"><h4>TRANSFER STATISTICS</h4><div id="transferStats" class="trend-list"></div></div>
       </div>
-
     </section>
-
 
     <!-- PDF -->
-
-    <section
-      id="pdfSection"
-      class="section">
-
-      <div class="section-title">
-        <h3>PDF REPORT</h3>
-      </div>
-
+    <section id="pdfSection" class="section">
+      <div class="section-title"><h3>PDF REPORT EXPORT</h3></div>
       <div class="pdf-card">
-
         <div class="pdf-info">
-
           <h4>GENERATE WALLET REPORT</h4>
-
-          <p>
-            Pakua taarifa ya accounts, balances,
-            income, expenses, transfers na transactions.
-          </p>
-
+          <p>Pakua taarifa kamili ya accounts, balances, income, expenses na madeni kama PDF.</p>
         </div>
-
-        <button
-          class="primary-btn pdf-btn"
-          onclick="exportPDF()">
-
-          📄 EXPORT PDF
-
-        </button>
-
+        <button class="primary-btn pdf-btn" onclick="exportPDF()">📄 EXPORT PDF</button>
       </div>
-
     </section>
 
-
   </main>
-
-  <!-- FOOTER -->
 
   <footer class="app-footer">
     <p>© <span id="footerYear">2026</span> <span>Goden Tech</span> — Goden Wallet. All rights reserved.</p>
   </footer>
-
 </div>
 
+<!-- DEBTS PANEL -->
+<div id="debtsPanel" class="debts-panel hidden">
+  <div class="debts-bar">
+    <div class="debts-bar-inner">
+      <button class="icon-btn" title="Rudi" onclick="closeDebts()">←</button>
+      <h3>Mfumo wa Madeni</h3>
+      <button class="secondary-btn" onclick="exportDebtsPDF()">📄 PDF</button>
+      <button class="secondary-btn" onclick="openDebtModal()">+ DENI</button>
+    </div>
+  </div>
 
-<!-- ================= ACCOUNT MODAL ================= -->
+  <div class="debts-panel-body">
+    <section id="debtsSection" class="section">
+      <div class="debt-summary">
+        <div class="debt-sum recv">
+          <small>Ninayodai (namdai mtu)</small>
+          <strong id="debtTotalRecv">TZS 0</strong>
+          <em id="debtCountRecv">0 wazi</em>
+        </div>
+        <div class="debt-sum pay">
+          <small>Ninayodaiwa (ananidai mtu)</small>
+          <strong id="debtTotalPay">TZS 0</strong>
+          <em id="debtCountPay">0 wazi</em>
+        </div>
+      </div>
 
-<div
-  id="accountModal"
-  class="modal hidden"
-  onclick="modalBackground(event,'accountModal')">
+      <div class="debt-bar">
+        <div class="period-tabs">
+          <button id="tabReceivable" class="active" onclick="setDebtTab('receivable')">↑ NINAYODAI</button>
+          <button id="tabPayable" onclick="setDebtTab('payable')">↓ NINAYODAIWA</button>
+        </div>
+        <select id="debtFilter" onchange="setDebtFilter(this.value)" style="padding:8px 12px;border-radius:12px">
+          <option value="open">Zilizo wazi</option>
+          <option value="paid">Zilizolipwa</option>
+          <option value="all">Zote</option>
+        </select>
+      </div>
 
+      <div id="debtList" class="debt-list"><div class="loading">LOADING DEBTS...</div></div>
+    </section>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div id="accountModal" class="modal hidden" onclick="modalBackground(event,'accountModal')">
   <div class="modal-box">
-
     <div class="modal-head">
-
-      <h3 id="accountModalTitle">
-        ADD ACCOUNT
-      </h3>
-
-      <button
-        class="close-btn"
-        onclick="closeModal('accountModal')">
-        ×
-      </button>
-
+      <h3 id="accountModalTitle">ADD ACCOUNT</h3>
+      <button class="close-btn" onclick="closeModal('accountModal')">×</button>
     </div>
-
-
-    <input
-      id="accountId"
-      type="hidden">
-
-
+    <input id="accountId" type="hidden">
+    <div class="field"><label>Account Name</label><input id="accountName" placeholder="Mfano: Cash, M-Pesa, CRDB"></div>
     <div class="field">
-
-      <label>Account Name</label>
-
-      <input
-        id="accountName"
-        placeholder="Mfano: Cash, M-Pesa, CRDB">
-
-    </div>
-
-
-    <div class="field">
-
       <label>Account Type</label>
-
       <select id="accountType">
-
         <option value="Cash">Cash</option>
         <option value="Mobile Money">Mobile Money</option>
         <option value="Bank">Bank</option>
         <option value="Savings">Savings</option>
         <option value="Other">Other</option>
-
       </select>
-
     </div>
-
-
-    <div class="field">
-
-      <label>Opening Balance</label>
-
-      <input
-        id="accountBalance"
-        type="number"
-        min="0"
-        step="0.01"
-        placeholder="0">
-
-    </div>
-
-
+    <div class="field"><label id="accountBalanceLabel">Opening Balance</label><input id="accountBalance" type="number" step="0.01" placeholder="0"></div>
     <div class="form-actions">
-
-      <button
-        class="secondary-btn"
-        onclick="closeModal('accountModal')">
-        CANCEL
-      </button>
-
-      <button
-        class="primary-btn"
-        onclick="saveAccount()">
-        SAVE ACCOUNT
-      </button>
-
+      <button class="secondary-btn" onclick="closeModal('accountModal')">CANCEL</button>
+      <button class="primary-btn" onclick="saveAccount()">SAVE ACCOUNT</button>
     </div>
-
   </div>
-
 </div>
 
-
-<!-- ================= TRANSACTION MODAL ================= -->
-
-<div
-  id="transactionModal"
-  class="modal hidden"
-  onclick="modalBackground(event,'transactionModal')">
-
+<div id="accountActionModal" class="modal hidden" onclick="modalBackground(event,'accountActionModal')">
   <div class="modal-box">
-
     <div class="modal-head">
-
-      <h3 id="transactionModalTitle">
-        ADD TRANSACTION
-      </h3>
-
-      <button
-        class="close-btn"
-        onclick="closeModal('transactionModal')">
-        ×
-      </button>
-
+      <h3 id="accountActionTitle">ACCOUNT</h3>
+      <button class="close-btn" onclick="closeModal('accountActionModal')">×</button>
     </div>
+    <input id="accountActionId" type="hidden">
+    <div class="form-actions" style="margin-top:0">
+      <button class="secondary-btn" onclick="editAccountFromActions()">✎ EDIT</button>
+      <button class="danger-btn" onclick="deleteAccountFromActions()">🗑 DELETE</button>
+    </div>
+  </div>
+</div>
 
-
-    <input
-      id="transactionId"
-      type="hidden">
-
-
+<div id="transactionModal" class="modal hidden" onclick="modalBackground(event,'transactionModal')">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 id="transactionModalTitle">ADD TRANSACTION</h3>
+      <button class="close-btn" onclick="closeModal('transactionModal')">×</button>
+    </div>
+    <input id="transactionId" type="hidden">
     <div class="field">
-
       <label>Transaction Type</label>
-
-      <select
-        id="transactionType"
-        onchange="transactionTypeChanged()">
-
+      <select id="transactionType" onchange="transactionTypeChanged()">
         <option value="income">Income</option>
         <option value="expense">Expense</option>
         <option value="transfer">Transfer</option>
-
       </select>
-
     </div>
-
-
-    <div class="field">
-
-      <label>Description</label>
-
-      <input
-        id="transactionDescription"
-        placeholder="Mfano: Mshahara, Chakula...">
-
+    <div class="field"><label>Description</label><input id="transactionDescription" placeholder="Mfano: Mshahara, Chakula..."></div>
+    <div class="field"><label>Amount</label><input id="transactionAmount" type="number" min="0" step="0.01" placeholder="0"></div>
+    <div id="singleAccountField" class="field"><label>Account</label><select id="transactionAccount"></select></div>
+    <div id="transferFields" class="hidden">
+      <div class="field"><label>From Account</label><select id="fromAccount"></select></div>
+      <div class="field"><label>To Account</label><select id="toAccount"></select></div>
     </div>
-
-
-    <div class="field">
-
-      <label>Amount</label>
-
-      <input
-        id="transactionAmount"
-        type="number"
-        min="0"
-        step="0.01"
-        placeholder="0">
-
-    </div>
-
-
-    <div
-      id="singleAccountField"
-      class="field">
-
-      <label>Account</label>
-
-      <select id="transactionAccount"></select>
-
-    </div>
-
-
-    <div
-      id="transferFields"
-      class="hidden">
-
-      <div class="field">
-
-        <label>From Account</label>
-
-        <select id="fromAccount"></select>
-
-      </div>
-
-      <div class="field">
-
-        <label>To Account</label>
-
-        <select id="toAccount"></select>
-
-      </div>
-
-    </div>
-
-
-    <div class="field">
-
-      <label>Date</label>
-
-      <input
-        id="transactionDate"
-        type="date">
-
-    </div>
-
-
+    <div class="field"><label>Date</label><input id="transactionDate" type="date"></div>
     <div class="form-actions">
-
-      <button
-        id="deleteTransactionBtn"
-        class="danger-btn hidden"
-        onclick="deleteTransaction()">
-        DELETE
-      </button>
-
-      <button
-        class="primary-btn"
-        onclick="saveTransaction()">
-        SAVE
-      </button>
-
+      <button id="deleteTransactionBtn" class="danger-btn hidden" onclick="deleteTransaction()">DELETE</button>
+      <button class="primary-btn" onclick="saveTransaction()">SAVE</button>
     </div>
-
   </div>
-
 </div>
 
+<div id="debtModal" class="modal hidden" onclick="modalBackground(event,'debtModal')">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 id="debtModalTitle">ONGEZA DENI</h3>
+      <button class="close-btn" onclick="closeModal('debtModal')">×</button>
+    </div>
+    <input id="debtId" type="hidden">
+    <div class="field">
+      <label>Aina ya deni</label>
+      <select id="debtKind" onchange="debtKindChanged()">
+        <option value="receivable">Ninayodai (namdai mtu)</option>
+        <option value="payable">Ninayodaiwa (ananidai mtu)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label id="debtPersonLabel">Jina la mdaiwa (namdai)</label>
+      <input id="debtPerson" placeholder="Mfano: Juma Ally">
+    </div>
+    <div class="field"><label>Kiasi cha deni</label><input id="debtAmount" type="number" min="0" step="0.01" placeholder="0"></div>
+    <div class="field"><label>Tarehe ya deni</label><input id="debtDate" type="date"></div>
+    <div class="field"><label>Tarehe ya kulipa (si lazima)</label><input id="debtDue" type="date"></div>
+    <div class="field"><label>Maelezo (si lazima)</label><input id="debtNote" placeholder="Mfano: Kodi ya pango"></div>
+    <div class="form-actions">
+      <button class="secondary-btn" onclick="closeModal('debtModal')">CANCEL</button>
+      <button class="primary-btn" onclick="saveDebt()">SAVE</button>
+    </div>
+  </div>
+</div>
 
-<!-- TOAST -->
+<div id="paymentModal" class="modal hidden" onclick="modalBackground(event,'paymentModal')">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 id="paymentModalTitle">ONGEZA MALIPO</h3>
+      <button class="close-btn" onclick="closeModal('paymentModal')">×</button>
+    </div>
+    <input id="paymentDebtId" type="hidden">
+    <div id="paymentInfo" class="pay-info"></div>
+    <div class="field">
+      <label>Kiasi kilicholipwa</label>
+      <input id="paymentAmount" type="number" min="0" step="0.01" placeholder="0">
+      <button class="fill-btn" type="button" onclick="fillRemaining()">LIPA DENI LOTE</button>
+    </div>
+    <div class="field">
+      <label id="paymentAccountLabel">Account</label>
+      <select id="paymentAccount"></select>
+    </div>
+    <div class="field"><label>Tarehe ya malipo</label><input id="paymentDate" type="date"></div>
+    <div class="field"><label>Maelezo (si lazima)</label><input id="paymentNote" placeholder="Mfano: Cash, M-Pesa..."></div>
+    <div class="form-actions">
+      <button class="secondary-btn" onclick="closeModal('paymentModal')">CANCEL</button>
+      <button class="primary-btn" onclick="savePayment()">HIFADHI MALIPO</button>
+    </div>
+  </div>
+</div>
 
 <div id="toast" class="toast"></div>
 
-
-<!-- ================= FIREBASE + APP ================= -->
-
+<!-- FIREBASE SCRIPT -->
 <script type="module">
-
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut
-}
-from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  getDocs,
-  doc,
-  setDoc,
-  deleteDoc,
-  runTransaction,
-  serverTimestamp
-}
-from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
-
-import { jsPDF }
-from "https://cdn.jsdelivr.net/npm/jspdf@2.5.2/+esm";
-
-
-/* ================= FIREBASE ================= */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs, doc, setDoc, deleteDoc, runTransaction, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey:"AIzaSyAj4cDuhJHKUQgYazrRXNATeUKpw4vgI24",
@@ -2160,2425 +714,1094 @@ const firebaseConfig = {
 };
 
 const appFirebase = initializeApp(firebaseConfig);
-
 const auth = getAuth(appFirebase);
-
 const db = getFirestore(appFirebase);
 
-
-/* ================= STATE ================= */
-
 let currentUser = null;
-
 let accounts = [];
-
 let transactions = [];
-
+let debts = [];
 let summaryPeriod = "all";
-
-
-/* ================= HELPERS ================= */
+let debtTab = "receivable";
+let debtFilter = "open";
+let hideBalance = false;
+let busy = false;
+const expandedDebts = new Set();
 
 const $ = id => document.getElementById(id);
+const fmt = value => "TZS " + Number(value || 0).toLocaleString("en-TZ");
+const money = value => hideBalance ? "TZS ***" : fmt(value);
+const round2 = n => Math.round((Number(n) + Number.EPSILON) * 100) / 100;
+const createdSecs = x => (x.createdAt && x.createdAt.seconds) || 0;
 
-const money = value =>
-  "TZS " +
-  Number(value || 0).toLocaleString("en-TZ");
-
-function today(){
-
-  return new Date()
-    .toISOString()
-    .slice(0,10);
-
+function localISO(d = new Date()){
+  const x = new Date(d.getTime());
+  x.setMinutes(x.getMinutes() - x.getTimezoneOffset());
+  return x.toISOString().slice(0,10);
 }
 
+const today = () => localISO();
+
 function escapeHTML(value){
-
-  return String(value ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-
+  return String(value ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
 }
 
 function showToast(message){
-
   const toast = $("toast");
-
   toast.textContent = message;
-
   toast.classList.add("show");
-
   clearTimeout(window.toastTimer);
+  window.toastTimer = setTimeout(()=>toast.classList.remove("show"),2800);
+}
 
-  window.toastTimer = setTimeout(()=>{
-    toast.classList.remove("show");
-  },2600);
-
+// Huzuia kubonyeza SAVE mara mbili wakati kazi inaendelea
+async function guard(fn){
+  if(busy) return;
+  busy = true;
+  try{ await fn(); }
+  finally{ busy = false; }
 }
 
 function accountName(id){
-
   const account = accounts.find(a => a.id === id);
-
   return account ? account.name : "Unknown";
-
 }
 
 function accountIcon(type){
-
   if(type === "Cash") return "💵";
-
   if(type === "Mobile Money") return "📱";
-
   if(type === "Bank") return "🏦";
-
   if(type === "Savings") return "💰";
-
   return "▣";
-
 }
 
+function genId(){
+  return Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+}
 
-/* ================= PASSWORD ================= */
+function renderAll(){
+  renderAccounts();
+  populateAccountSelects();
+  renderTransactions();
+  updateDashboard();
+  window.renderReports();
+  renderDebts();
+}
 
-window.togglePassword = function(){
-
-  const input = $("loginPassword");
-
-  input.type =
-    input.type === "password"
-    ? "text"
-    : "password";
-
+window.toggleBalanceVisibility = function(){
+  hideBalance = !hideBalance;
+  $("balanceEye").textContent = hideBalance ? "🙈" : "👁";
+  renderAll();
 };
 
-
-/* ================= LOGIN ================= */
+window.togglePassword = function(){
+  const input = $("loginPassword");
+  input.type = input.type === "password" ? "text" : "password";
+};
 
 window.login = async function(){
-
   const email = $("loginEmail").value.trim();
-
   const password = $("loginPassword").value;
-
   const btn = $("loginBtn");
-
   const error = $("loginError");
 
   error.textContent = "";
-
-  if(!password){
-
-    error.textContent =
-      "Ingiza password yako.";
-
-    return;
-
-  }
+  if(!password){ error.textContent = "Ingiza password yako."; return; }
 
   btn.disabled = true;
-
-  btn.textContent = "CONNECTING...";
+  btn.textContent = "Inaunganisha...";
 
   try{
-
-    await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-
+    await signInWithEmailAndPassword(auth,email,password);
   }catch(err){
-
     console.error(err);
-
-    error.textContent =
-      friendlyAuthError(err.code);
-
+    error.textContent = "Email au password si sahihi.";
   }finally{
-
     btn.disabled = false;
-
-    btn.textContent =
-      "LOGIN TO WALLET";
-
+    btn.textContent = "Ingia Mfomoni";
   }
-
 };
-
-
-function friendlyAuthError(code){
-
-  switch(code){
-
-    case "auth/invalid-credential":
-    case "auth/wrong-password":
-    case "auth/user-not-found":
-      return "Email au password si sahihi.";
-
-    case "auth/too-many-requests":
-      return "Jaribu tena baada ya muda.";
-
-    case "auth/network-request-failed":
-      return "Hakuna internet connection.";
-
-    default:
-      return "Login imeshindikana.";
-
-  }
-
-}
-
-
-/* ================= LOGOUT ================= */
 
 window.logout = async function(){
-
   try{
-
     await signOut(auth);
-
-    closeNavigator();
-
-  }catch(err){
-
-    console.error(err);
-
-  }
-
+    window.closeNavigator();
+    window.closeDebts();
+  }catch(err){ console.error(err); }
 };
-
-
-/* ================= AUTH STATE ================= */
 
 onAuthStateChanged(auth, async user => {
-
   if(user){
-
     currentUser = user;
-
     $("loginScreen").classList.add("hidden");
-
     $("app").classList.remove("hidden");
-
-    $("heroEmail").textContent =
-      user.email || "";
-
-    $("navUser").textContent =
-      user.email || "GODEN";
+    $("heroEmail").textContent = user.email || "";
+    $("navUser").textContent = user.email || "GODEN";
 
     try{
-
-      await setDoc(
-        doc(db,"users",user.uid),
-        {
-          uid:user.uid,
-          email:user.email,
-          lastLoginAt:serverTimestamp()
-        },
-        {merge:true}
-      );
-
+      await setDoc(doc(db,"users",user.uid),{ uid:user.uid, email:user.email, lastLoginAt:serverTimestamp() },{ merge:true });
       await loadAll();
-
-    }catch(err){
-
-      console.error(err);
-
-      showToast(
-        "Database error. Angalia Firestore Rules."
-      );
-
-    }
-
+    }catch(err){ console.error(err); showToast("Database Error."); }
   }else{
-
     currentUser = null;
-
+    accounts = []; transactions = []; debts = [];
+    $("loginPassword").value = "";
+    window.closeDebts();
+    document.querySelectorAll(".modal").forEach(m => m.classList.add("hidden"));
     $("app").classList.add("hidden");
-
     $("loginScreen").classList.remove("hidden");
-
   }
-
 });
 
-
-/* ================= LOAD ================= */
-
 async function loadAll(){
-
-  await loadAccounts();
-
-  await loadTransactions();
-
-  renderAccounts();
-
-  populateAccountSelects();
-
-  renderTransactions();
-
-  updateDashboard();
-
-  renderReports();
-
+  await Promise.all([loadAccounts(), loadTransactions(), loadDebts()]);
+  renderAll();
 }
-
 
 async function loadAccounts(){
-
   if(!currentUser) return;
-
-  const snap =
-    await getDocs(
-      collection(
-        db,
-        "users",
-        currentUser.uid,
-        "accounts"
-      )
-    );
-
-  accounts = snap.docs.map(d => ({
-    id:d.id,
-    ...d.data()
-  }));
-
-  accounts.sort((a,b)=>
-    String(a.name || "")
-      .localeCompare(
-        String(b.name || "")
-      )
-  );
-
+  const snap = await getDocs(collection(db,"users",currentUser.uid,"accounts"));
+  accounts = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+  accounts.sort((a,b)=>String(a.name||"").localeCompare(String(b.name||"")));
 }
-
 
 async function loadTransactions(){
-
   if(!currentUser) return;
-
-  const snap =
-    await getDocs(
-      collection(
-        db,
-        "users",
-        currentUser.uid,
-        "transactions"
-      )
-    );
-
-  transactions = snap.docs.map(d => ({
-    id:d.id,
-    ...d.data()
-  }));
-
-  transactions.sort((a,b)=>
-    String(b.date || "")
-      .localeCompare(
-        String(a.date || "")
-      )
-  );
-
+  const snap = await getDocs(collection(db,"users",currentUser.uid,"transactions"));
+  transactions = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+  transactions.sort((a,b)=> String(b.date||"").localeCompare(String(a.date||"")) || createdSecs(b) - createdSecs(a));
 }
 
+async function loadDebts(){
+  if(!currentUser) return;
+  const snap = await getDocs(collection(db,"users",currentUser.uid,"debts"));
+  debts = snap.docs.map(d => ({ id:d.id, ...d.data(), payments:d.data().payments || [] }));
+  debts.sort((a,b)=> String(b.date||"").localeCompare(String(a.date||"")) || createdSecs(b) - createdSecs(a));
+}
 
-/* ================= ACCOUNTS ================= */
+/* ---------------- ACCOUNTS ---------------- */
 
 window.openAccountModal = function(id = ""){
-
   $("accountId").value = id;
-
   if(id){
-
-    const account =
-      accounts.find(a => a.id === id);
-
+    const account = accounts.find(a => a.id === id);
     if(!account) return;
-
-    $("accountModalTitle").textContent =
-      "EDIT ACCOUNT";
-
-    $("accountName").value =
-      account.name || "";
-
-    $("accountType").value =
-      account.type || "Cash";
-
-    $("accountBalance").value =
-      account.balance || 0;
-
+    $("accountModalTitle").textContent = "EDIT ACCOUNT";
+    $("accountBalanceLabel").textContent = "Balance ya sasa";
+    $("accountName").value = account.name || "";
+    $("accountType").value = account.type || "Cash";
+    $("accountBalance").value = account.balance || 0;
   }else{
-
-    $("accountModalTitle").textContent =
-      "ADD ACCOUNT";
-
+    $("accountModalTitle").textContent = "ADD ACCOUNT";
+    $("accountBalanceLabel").textContent = "Opening Balance";
     $("accountName").value = "";
-
     $("accountType").value = "Cash";
-
     $("accountBalance").value = 0;
-
   }
-
   $("accountModal").classList.remove("hidden");
-
 };
 
-
-window.saveAccount = async function(){
-
+window.saveAccount = () => guard(async () => {
   if(!currentUser) return;
+  const id = $("accountId").value;
+  const name = $("accountName").value.trim();
+  const type = $("accountType").value;
+  const balance = round2($("accountBalance").value || 0);
 
-  const id =
-    $("accountId").value;
-
-  const name =
-    $("accountName").value.trim();
-
-  const type =
-    $("accountType").value;
-
-  const balance =
-    Number($("accountBalance").value || 0);
-
-  if(!name){
-
-    showToast("Ingiza jina la account.");
-
-    return;
-
-  }
+  if(!name){ showToast("Ingiza jina la account."); return; }
 
   try{
-
-    const data = {
-      name,
-      type,
-      balance,
-      updatedAt:serverTimestamp()
-    };
-
+    const data = { name, type, balance, updatedAt:serverTimestamp() };
     if(id){
-
-      await setDoc(
-        doc(
-          db,
-          "users",
-          currentUser.uid,
-          "accounts",
-          id
-        ),
-        data,
-        {merge:true}
-      );
-
+      await setDoc(doc(db,"users",currentUser.uid,"accounts",id),data,{merge:true});
       showToast("Account imebadilishwa.");
-
     }else{
-
-      await addDoc(
-        collection(
-          db,
-          "users",
-          currentUser.uid,
-          "accounts"
-        ),
-        {
-          ...data,
-          createdAt:serverTimestamp()
-        }
-      );
-
+      await addDoc(collection(db,"users",currentUser.uid,"accounts"),{ ...data, createdAt:serverTimestamp() });
       showToast("Account imeongezwa.");
-
     }
-
-    closeModal("accountModal");
-
+    window.closeModal("accountModal");
     await loadAll();
-
-  }catch(err){
-
-    console.error(err);
-
-    showToast("Imeshindikana kuhifadhi account.");
-
-  }
-
-};
-
+  }catch(err){ console.error(err); showToast("Imeshindikana kuhifadhi."); }
+});
 
 window.deleteAccount = async function(id){
-
   if(!currentUser) return;
-
-  const account =
-    accounts.find(a => a.id === id);
-
+  const account = accounts.find(a => a.id === id);
   if(!account) return;
-
-  if(!confirm(
-    "Futa account " +
-    account.name +
-    "?"
-  )) return;
-
+  const used = transactions.filter(t => t.accountId === id || t.fromAccountId === id || t.toAccountId === id).length;
+  const msg = used
+    ? `Account "${account.name}" ina transactions ${used}. Zitabaki kwenye historia kama "Unknown". Futa?`
+    : `Futa account ${account.name}?`;
+  if(!confirm(msg)) return;
   try{
-
-    await deleteDoc(
-      doc(
-        db,
-        "users",
-        currentUser.uid,
-        "accounts",
-        id
-      )
-    );
-
+    await deleteDoc(doc(db,"users",currentUser.uid,"accounts",id));
     showToast("Account imefutwa.");
-
     await loadAll();
-
-  }catch(err){
-
-    console.error(err);
-
-    showToast("Account haijafutwa.");
-
-  }
-
+  }catch(err){ console.error(err); showToast("Account haijafutwa."); }
 };
-
 
 function renderAccounts(){
-
   const list = $("accountsList");
-
   if(!accounts.length){
-
-    list.innerHTML = `
-      <button
-        class="add-account"
-        onclick="openAccountModal()">
-
-        + ADD FIRST ACCOUNT
-
-      </button>
-    `;
-
+    list.innerHTML = `<button class="add-account" onclick="openAccountModal()">+ ADD FIRST ACCOUNT</button>`;
     return;
-
   }
-
-  list.innerHTML =
-    accounts.map(a => `
-
-      <div class="account-card">
-
-        <div class="account-top">
-
-          <div class="account-icon">
-            ${accountIcon(a.type)}
-          </div>
-
-          <button
-            class="account-menu"
-            onclick="openAccountActions('${a.id}')">
-            ⋮
-          </button>
-
-        </div>
-
-        <div class="account-name">
-          ${escapeHTML(a.name)}
-        </div>
-
-        <div class="account-type">
-          ${escapeHTML(a.type || "Other")}
-        </div>
-
-        <div class="account-balance">
-          ${money(a.balance)}
-        </div>
-
+  list.innerHTML = accounts.map(a => `
+    <div class="account-card">
+      <div class="account-top">
+        <div class="account-icon">${accountIcon(a.type)}</div>
+        <button class="account-menu" onclick="openAccountActions('${a.id}')">⋮</button>
       </div>
-
-    `).join("") +
-
-    `
-
-      <button
-        class="add-account"
-        onclick="openAccountModal()">
-
-        + ADD ACCOUNT
-
-      </button>
-
-    `;
-
+      <div>
+        <div class="account-name">${escapeHTML(a.name)}</div>
+        <div class="account-type">${escapeHTML(a.type || "Other")}</div>
+      </div>
+      <div class="account-balance">${money(a.balance)}</div>
+    </div>
+  `).join("") + `<button class="add-account" onclick="openAccountModal()">+ ADD ACCOUNT</button>`;
 }
-
 
 window.openAccountActions = function(id){
-
-  const account =
-    accounts.find(a => a.id === id);
-
+  const account = accounts.find(a => a.id === id);
   if(!account) return;
-
-  const action =
-    prompt(
-      account.name +
-      "\\n\\n1 = Edit\\n2 = Delete"
-    );
-
-  if(action === "1"){
-
-    openAccountModal(id);
-
-  }else if(action === "2"){
-
-    deleteAccount(id);
-
-  }
-
+  $("accountActionId").value = id;
+  $("accountActionTitle").textContent = account.name;
+  $("accountActionModal").classList.remove("hidden");
 };
 
+window.editAccountFromActions = function(){
+  const id = $("accountActionId").value;
+  window.closeModal("accountActionModal");
+  window.openAccountModal(id);
+};
 
-/* ================= TRANSACTION MODAL ================= */
+window.deleteAccountFromActions = function(){
+  const id = $("accountActionId").value;
+  window.closeModal("accountActionModal");
+  window.deleteAccount(id);
+};
+
+/* ---------------- TRANSACTIONS ---------------- */
 
 window.openTransactionModal = function(type="income",id=""){
-
+  window.closeNavigator();
+  if(!accounts.length){ showToast("Ongeza account kwanza."); return; }
+  populateAccountSelects();
   $("transactionId").value = id;
-
   $("transactionType").value = type;
-
   $("transactionDate").value = today();
-
   $("transactionDescription").value = "";
-
   $("transactionAmount").value = "";
-
   $("deleteTransactionBtn").classList.add("hidden");
-
-  $("transactionModalTitle").textContent =
-    "ADD " + type.toUpperCase();
-
+  $("transactionModalTitle").textContent = "ADD " + type.toUpperCase();
 
   if(id){
-
-    const t =
-      transactions.find(x => x.id === id);
-
+    const t = transactions.find(x => x.id === id);
     if(!t) return;
-
-    $("transactionModalTitle").textContent =
-      "EDIT " + String(t.type).toUpperCase();
-
-    $("transactionType").value =
-      t.type;
-
-    $("transactionDescription").value =
-      t.description || "";
-
-    $("transactionAmount").value =
-      t.amount || "";
-
-    $("transactionDate").value =
-      t.date || today();
-
-    $("transactionAccount").value =
-      t.accountId || "";
-
-    $("fromAccount").value =
-      t.fromAccountId || "";
-
-    $("toAccount").value =
-      t.toAccountId || "";
-
+    $("transactionModalTitle").textContent = "EDIT " + String(t.type).toUpperCase();
+    $("transactionType").value = t.type;
+    $("transactionDescription").value = t.description || "";
+    $("transactionAmount").value = t.amount || "";
+    $("transactionDate").value = t.date || today();
+    if(t.accountId) $("transactionAccount").value = t.accountId;
+    if(t.fromAccountId) $("fromAccount").value = t.fromAccountId;
+    if(t.toAccountId) $("toAccount").value = t.toAccountId;
     $("deleteTransactionBtn").classList.remove("hidden");
-
   }
-
-  transactionTypeChanged();
-
+  window.transactionTypeChanged();
   $("transactionModal").classList.remove("hidden");
-
 };
 
+// Transaction iliyotokana na malipo ya deni inabadilishwa kupitia Madeni
+window.editTransaction = function(id){
+  const t = transactions.find(x => x.id === id);
+  if(!t) return;
+  if(t.debtId && debts.some(d => d.id === t.debtId)){
+    showToast("Hii ni malipo ya deni. Libadilishe kupitia Madeni.");
+    return;
+  }
+  window.openTransactionModal(t.type,id);
+};
 
 window.transactionTypeChanged = function(){
-
-  const type =
-    $("transactionType").value;
-
-  if(type === "transfer"){
-
-    $("singleAccountField")
-      .classList.add("hidden");
-
-    $("transferFields")
-      .classList.remove("hidden");
-
-  }else{
-
-    $("singleAccountField")
-      .classList.remove("hidden");
-
-    $("transferFields")
-      .classList.add("hidden");
-
-  }
-
-  populateAccountSelects();
-
+  const isTransfer = $("transactionType").value === "transfer";
+  $("singleAccountField").classList.toggle("hidden",isTransfer);
+  $("transferFields").classList.toggle("hidden",!isTransfer);
 };
-
 
 function populateAccountSelects(){
-
   const options = accounts.length
-    ? accounts.map(a => `
-        <option value="${a.id}">
-          ${escapeHTML(a.name)}
-          — ${money(a.balance)}
-        </option>
-      `).join("")
-    : `
-        <option value="">
-          Hakuna account
-        </option>
-      `;
-
-  $("transactionAccount").innerHTML =
-    options;
-
-  $("fromAccount").innerHTML =
-    options;
-
-  $("toAccount").innerHTML =
-    options;
-
+    ? accounts.map(a => `<option value="${a.id}">${escapeHTML(a.name)} — ${money(a.balance)}</option>`).join("")
+    : `<option value="">Hakuna account</option>`;
+  $("transactionAccount").innerHTML = options;
+  $("fromAccount").innerHTML = options;
+  $("toAccount").innerHTML = options;
 }
 
-
-window.saveTransaction = async function(){
-
+window.saveTransaction = () => guard(async () => {
   if(!currentUser) return;
+  const id = $("transactionId").value;
+  const type = $("transactionType").value;
+  const isTransfer = type === "transfer";
+  const old = id ? transactions.find(x => x.id === id) : null;
+  const t = {
+    type,
+    description: $("transactionDescription").value.trim(),
+    amount: round2($("transactionAmount").value || 0),
+    date: $("transactionDate").value || today(),
+    accountId: isTransfer ? "" : $("transactionAccount").value,
+    fromAccountId: isTransfer ? $("fromAccount").value : "",
+    toAccountId: isTransfer ? $("toAccount").value : ""
+  };
 
-  const id =
-    $("transactionId").value;
-
-  const type =
-    $("transactionType").value;
-
-  const description =
-    $("transactionDescription").value.trim();
-
-  const amount =
-    Number($("transactionAmount").value || 0);
-
-  const date =
-    $("transactionDate").value || today();
-
-  if(amount <= 0){
-
-    showToast("Ingiza amount kubwa kuliko 0.");
-
-    return;
-
-  }
-
-  if(!description){
-
-    showToast("Ingiza description.");
-
-    return;
-
-  }
-
-
-  if(type === "transfer"){
-
-    const from =
-      $("fromAccount").value;
-
-    const to =
-      $("toAccount").value;
-
-    if(!from || !to){
-
-      showToast("Chagua accounts zote mbili.");
-
-      return;
-
-    }
-
-    if(from === to){
-
-      showToast(
-        "From na To lazima ziwe tofauti."
-      );
-
-      return;
-
-    }
-
-  }else{
-
-    if(!$("transactionAccount").value){
-
-      showToast("Chagua account.");
-
-      return;
-
-    }
-
-  }
-
+  if(t.amount <= 0 || !t.description){ showToast("Ingiza maelezo na amount sahihi."); return; }
+  if(isTransfer){
+    if(!t.fromAccountId || !t.toAccountId){ showToast("Chagua accounts zote mbili."); return; }
+    if(t.fromAccountId === t.toAccountId){ showToast("Account ya kutoa na kupokea haziwezi kuwa moja."); return; }
+  }else if(!t.accountId){ showToast("Chagua account."); return; }
 
   try{
-
-    if(id){
-
-      await updateExistingTransaction(id);
-
-    }else{
-
-      await createTransaction();
-
-    }
-
-    closeModal("transactionModal");
-
+    if(id && old) await updateExistingTransaction(id,t);
+    else await createTransaction(t);
+    window.closeModal("transactionModal");
     await loadAll();
-
     showToast("Transaction imehifadhiwa.");
+  }catch(err){ console.error(err); showToast("Transaction haijahifadhiwa."); }
+});
 
-  }catch(err){
-
-    console.error(err);
-
-    showToast(
-      "Transaction haijahifadhiwa."
-    );
-
-  }
-
-};
-
-
-/* ================= CREATE ================= */
-
-async function createTransaction(){
-
-  const type =
-    $("transactionType").value;
-
-  const amount =
-    Number($("transactionAmount").value);
-
-  const description =
-    $("transactionDescription").value.trim();
-
-  const date =
-    $("transactionDate").value || today();
-
-  const accountId =
-    $("transactionAccount").value;
-
-  const fromAccountId =
-    $("fromAccount").value;
-
-  const toAccountId =
-    $("toAccount").value;
-
-
-  await runTransaction(
-    db,
-    async tx => {
-
-      const accountRefs = {};
-
-      for(const a of accounts){
-
-        accountRefs[a.id] =
-          doc(
-            db,
-            "users",
-            currentUser.uid,
-            "accounts",
-            a.id
-          );
-
-      }
-
-
-      if(type === "income"){
-
-        const ref =
-          accountRefs[accountId];
-
-        const snap =
-          await tx.get(ref);
-
-        const balance =
-          Number(snap.data()?.balance || 0);
-
-        tx.update(ref,{
-          balance:balance + amount,
-          updatedAt:serverTimestamp()
-        });
-
-      }
-
-
-      if(type === "expense"){
-
-        const ref =
-          accountRefs[accountId];
-
-        const snap =
-          await tx.get(ref);
-
-        const balance =
-          Number(snap.data()?.balance || 0);
-
-        tx.update(ref,{
-          balance:balance - amount,
-          updatedAt:serverTimestamp()
-        });
-
-      }
-
-
-      if(type === "transfer"){
-
-        const fromRef =
-          accountRefs[fromAccountId];
-
-        const toRef =
-          accountRefs[toAccountId];
-
-        const fromSnap =
-          await tx.get(fromRef);
-
-        const toSnap =
-          await tx.get(toRef);
-
-        const fromBalance =
-          Number(fromSnap.data()?.balance || 0);
-
-        const toBalance =
-          Number(toSnap.data()?.balance || 0);
-
-        tx.update(fromRef,{
-          balance:fromBalance - amount,
-          updatedAt:serverTimestamp()
-        });
-
-        tx.update(toRef,{
-          balance:toBalance + amount,
-          updatedAt:serverTimestamp()
-        });
-
-      }
-
-
-      const transactionRef =
-        doc(
-          collection(
-            db,
-            "users",
-            currentUser.uid,
-            "transactions"
-          )
-        );
-
-      tx.set(transactionRef,{
-        type,
-        description,
-        amount,
-        date,
-        accountId:
-          type === "transfer"
-          ? ""
-          : accountId,
-        fromAccountId:
-          type === "transfer"
-          ? fromAccountId
-          : "",
-        toAccountId:
-          type === "transfer"
-          ? toAccountId
-          : "",
-        createdAt:serverTimestamp()
-      });
-
-    }
-  );
-
+function txDeltas(t,sign){
+  const amt = Number(t.amount || 0) * sign;
+  const d = {};
+  const add = (id,v) => { if(id) d[id] = (d[id] || 0) + v; };
+  if(t.type === "income") add(t.accountId,amt);
+  else if(t.type === "expense") add(t.accountId,-amt);
+  else if(t.type === "transfer"){ add(t.fromAccountId,-amt); add(t.toAccountId,amt); }
+  return d;
 }
 
-
-/* ================= EDIT ================= */
-
-async function updateExistingTransaction(id){
-
-  const old =
-    transactions.find(t => t.id === id);
-
-  if(!old) return;
-
-  const type =
-    $("transactionType").value;
-
-  const amount =
-    Number($("transactionAmount").value);
-
-  const description =
-    $("transactionDescription").value.trim();
-
-  const date =
-    $("transactionDate").value || today();
-
-  const newAccountId =
-    $("transactionAccount").value;
-
-  const newFrom =
-    $("fromAccount").value;
-
-  const newTo =
-    $("toAccount").value;
-
-
-  await runTransaction(
-    db,
-    async tx => {
-
-      const refs = {};
-
-      for(const a of accounts){
-
-        refs[a.id] =
-          doc(
-            db,
-            "users",
-            currentUser.uid,
-            "accounts",
-            a.id
-          );
-
-      }
-
-
-      /* REVERSE OLD */
-
-      if(old.type === "income"){
-
-        const ref = refs[old.accountId];
-
-        const snap = await tx.get(ref);
-
-        const balance =
-          Number(snap.data()?.balance || 0);
-
-        tx.update(ref,{
-          balance:balance - Number(old.amount || 0),
-          updatedAt:serverTimestamp()
-        });
-
-      }
-
-
-      if(old.type === "expense"){
-
-        const ref = refs[old.accountId];
-
-        const snap = await tx.get(ref);
-
-        const balance =
-          Number(snap.data()?.balance || 0);
-
-        tx.update(ref,{
-          balance:balance + Number(old.amount || 0),
-          updatedAt:serverTimestamp()
-        });
-
-      }
-
-
-      if(old.type === "transfer"){
-
-        const fromRef =
-          refs[old.fromAccountId];
-
-        const toRef =
-          refs[old.toAccountId];
-
-        const fromSnap =
-          await tx.get(fromRef);
-
-        const toSnap =
-          await tx.get(toRef);
-
-        const fromBalance =
-          Number(fromSnap.data()?.balance || 0);
-
-        const toBalance =
-          Number(toSnap.data()?.balance || 0);
-
-        tx.update(fromRef,{
-          balance:
-            fromBalance + Number(old.amount || 0),
-          updatedAt:serverTimestamp()
-        });
-
-        tx.update(toRef,{
-          balance:
-            toBalance - Number(old.amount || 0),
-          updatedAt:serverTimestamp()
-        });
-
-      }
-
-
-      /* APPLY NEW */
-
-      if(type === "income"){
-
-        const ref = refs[newAccountId];
-
-        const snap = await tx.get(ref);
-
-        const balance =
-          Number(snap.data()?.balance || 0);
-
-        tx.update(ref,{
-          balance:balance + amount,
-          updatedAt:serverTimestamp()
-        });
-
-      }
-
-
-      if(type === "expense"){
-
-        const ref = refs[newAccountId];
-
-        const snap = await tx.get(ref);
-
-        const balance =
-          Number(snap.data()?.balance || 0);
-
-        tx.update(ref,{
-          balance:balance - amount,
-          updatedAt:serverTimestamp()
-        });
-
-      }
-
-
-      if(type === "transfer"){
-
-        const fromRef = refs[newFrom];
-
-        const toRef = refs[newTo];
-
-        const fromSnap =
-          await tx.get(fromRef);
-
-        const toSnap =
-          await tx.get(toRef);
-
-        const fromBalance =
-          Number(fromSnap.data()?.balance || 0);
-
-        const toBalance =
-          Number(toSnap.data()?.balance || 0);
-
-        tx.update(fromRef,{
-          balance:fromBalance - amount,
-          updatedAt:serverTimestamp()
-        });
-
-        tx.update(toRef,{
-          balance:toBalance + amount,
-          updatedAt:serverTimestamp()
-        });
-
-      }
-
-
-      tx.update(
-        doc(
-          db,
-          "users",
-          currentUser.uid,
-          "transactions",
-          id
-        ),
-        {
-          type,
-          description,
-          amount,
-          date,
-          accountId:
-            type === "transfer"
-            ? ""
-            : newAccountId,
-          fromAccountId:
-            type === "transfer"
-            ? newFrom
-            : "",
-          toAccountId:
-            type === "transfer"
-            ? newTo
-            : "",
-          updatedAt:serverTimestamp()
-        }
-      );
-
-    }
-  );
-
+function mergeDeltas(...list){
+  const r = {};
+  list.forEach(d => Object.entries(d).forEach(([k,v]) => { r[k] = (r[k] || 0) + v; }));
+  return r;
 }
 
+const accRef = id => doc(db,"users",currentUser.uid,"accounts",id);
 
-/* ================= DELETE TRANSACTION ================= */
+async function applyDeltas(tx,deltas){
+  const ids = Object.keys(deltas);
+  const snaps = await Promise.all(ids.map(id => tx.get(accRef(id))));
+  snaps.forEach((snap,i) => {
+    if(!snap.exists()) return;
+    tx.update(accRef(ids[i]),{ balance: round2(Number(snap.data().balance || 0) + deltas[ids[i]]), updatedAt: serverTimestamp() });
+  });
+}
 
-window.deleteTransaction = async function(){
+async function createTransaction(t){
+  await runTransaction(db, async tx => {
+    await applyDeltas(tx,txDeltas(t,1));
+    const ref = doc(collection(db,"users",currentUser.uid,"transactions"));
+    tx.set(ref,{ ...t, createdAt:serverTimestamp() });
+  });
+}
 
-  const id =
-    $("transactionId").value;
-
-  if(!id || !currentUser) return;
-
-  const old =
-    transactions.find(t => t.id === id);
-
+async function updateExistingTransaction(id,t){
+  const old = transactions.find(x => x.id === id);
   if(!old) return;
+  await runTransaction(db, async tx => {
+    await applyDeltas(tx, mergeDeltas(txDeltas(old,-1),txDeltas(t,1)));
+    tx.update(doc(db,"users",currentUser.uid,"transactions",id),{ ...t, updatedAt:serverTimestamp() });
+  });
+}
 
-  if(!confirm(
-    "Futa transaction hii?"
-  )) return;
-
-
+window.deleteTransaction = () => guard(async () => {
+  const id = $("transactionId").value;
+  const old = transactions.find(t => t.id === id);
+  if(!id || !old || !confirm("Futa transaction hii?")) return;
   try{
-
-    await runTransaction(
-      db,
-      async tx => {
-
-        const refs = {};
-
-        for(const a of accounts){
-
-          refs[a.id] =
-            doc(
-              db,
-              "users",
-              currentUser.uid,
-              "accounts",
-              a.id
-            );
-
-        }
-
-
-        if(old.type === "income"){
-
-          const ref =
-            refs[old.accountId];
-
-          const snap =
-            await tx.get(ref);
-
-          const balance =
-            Number(snap.data()?.balance || 0);
-
-          tx.update(ref,{
-            balance:
-              balance - Number(old.amount || 0),
-            updatedAt:serverTimestamp()
-          });
-
-        }
-
-
-        if(old.type === "expense"){
-
-          const ref =
-            refs[old.accountId];
-
-          const snap =
-            await tx.get(ref);
-
-          const balance =
-            Number(snap.data()?.balance || 0);
-
-          tx.update(ref,{
-            balance:
-              balance + Number(old.amount || 0),
-            updatedAt:serverTimestamp()
-          });
-
-        }
-
-
-        if(old.type === "transfer"){
-
-          const fromRef =
-            refs[old.fromAccountId];
-
-          const toRef =
-            refs[old.toAccountId];
-
-          const fromSnap =
-            await tx.get(fromRef);
-
-          const toSnap =
-            await tx.get(toRef);
-
-          const fromBalance =
-            Number(fromSnap.data()?.balance || 0);
-
-          const toBalance =
-            Number(toSnap.data()?.balance || 0);
-
-          tx.update(fromRef,{
-            balance:
-              fromBalance + Number(old.amount || 0),
-            updatedAt:serverTimestamp()
-          });
-
-          tx.update(toRef,{
-            balance:
-              toBalance - Number(old.amount || 0),
-            updatedAt:serverTimestamp()
-          });
-
-        }
-
-
-        tx.delete(
-          doc(
-            db,
-            "users",
-            currentUser.uid,
-            "transactions",
-            id
-          )
-        );
-
-      }
-    );
-
-
-    closeModal("transactionModal");
-
+    await runTransaction(db, async tx => {
+      await applyDeltas(tx,txDeltas(old,-1));
+      tx.delete(doc(db,"users",currentUser.uid,"transactions",id));
+    });
+    window.closeModal("transactionModal");
     await loadAll();
-
     showToast("Transaction imefutwa.");
-
-  }catch(err){
-
-    console.error(err);
-
-    showToast(
-      "Transaction haijafutwa."
-    );
-
-  }
-
-};
-
-
-/* ================= RENDER TRANSACTIONS ================= */
+  }catch(err){ console.error(err); showToast("Transaction haijafutwa."); }
+});
 
 function renderTransactions(){
+  const list = $("transactionList");
+  if(!transactions.length){ list.innerHTML = `<div class="empty">Hakuna transactions bado.</div>`; return; }
 
-  const list =
-    $("transactionList");
+  list.innerHTML = transactions.slice(0,50).map(t => {
+    const icon = t.type === "income" ? "↑" : t.type === "expense" ? "↓" : "⇄";
+    const subtitle = t.type === "transfer" ? escapeHTML(accountName(t.fromAccountId)) + " → " + escapeHTML(accountName(t.toAccountId)) : escapeHTML(accountName(t.accountId));
+    const sign = t.type === "income" ? "+" : t.type === "expense" ? "-" : "⇄ ";
 
-  if(!transactions.length){
-
-    list.innerHTML = `
-      <div class="empty">
-        Hakuna transactions bado.
+    return `
+      <div class="transaction" onclick="editTransaction('${t.id}')">
+        <div class="transaction-icon ${t.type}">${icon}</div>
+        <div class="transaction-info">
+          <strong>${escapeHTML(t.description)}</strong>
+          <small>${subtitle} · ${escapeHTML(t.date || "")}</small>
+        </div>
+        <div class="transaction-amount">
+          <strong class="amount-${t.type}">${sign}${money(t.amount)}</strong>
+          <small>${String(t.type).toUpperCase()}</small>
+        </div>
       </div>
     `;
+  }).join("");
+}
 
-    return;
+/* ---------------- DEBTS ---------------- */
 
+function debtStats(d){
+  const paid = (d.payments || []).reduce((s,p) => s + Number(p.amount || 0),0);
+  const total = Number(d.amount || 0);
+  return { total, paid, remaining: Math.max(0,round2(total - paid)) };
+}
+
+const isSettled = d => debtStats(d).remaining <= 0.0001;
+
+function debtState(d){
+  const s = debtStats(d);
+  if(s.remaining <= 0.0001) return { cls:"paid", label:"IMELIPWA" };
+  if(d.dueDate && d.dueDate < today()) return { cls:"late", label:"IMEPITA MUDA" };
+  if(s.paid > 0) return { cls:"open", label:"INALIPWA" };
+  return { cls:"open", label:"HALIJALIPWA" };
+}
+
+window.setDebtTab = kind => { debtTab = kind; renderDebts(); };
+window.setDebtFilter = val => { debtFilter = val; renderDebts(); };
+
+window.openDebts = function(kind){
+  window.closeNavigator();
+  if(kind) debtTab = kind;
+  debtFilter = "open";
+  $("debtFilter").value = "open";
+  renderDebts();
+  const panel = $("debtsPanel");
+  panel.classList.remove("hidden");
+  panel.scrollTop = 0;
+  document.body.style.overflow = "hidden";
+};
+
+window.closeDebts = function(){
+  $("debtsPanel").classList.add("hidden");
+  document.body.style.overflow = "";
+};
+
+window.debtKindChanged = function(){
+  $("debtPersonLabel").textContent = $("debtKind").value === "receivable" ? "Jina la mdaiwa (namdai)" : "Jina la mdai (ananidai)";
+};
+
+window.openDebtModal = function(id = ""){
+  window.closeNavigator();
+  $("debtId").value = id;
+  if(id){
+    const d = debts.find(x => x.id === id);
+    if(!d) return;
+    $("debtModalTitle").textContent = "BADILISHA DENI";
+    $("debtKind").value = d.kind;
+    $("debtPerson").value = d.person || "";
+    $("debtAmount").value = d.amount || "";
+    $("debtDate").value = d.date || today();
+    $("debtDue").value = d.dueDate || "";
+    $("debtNote").value = d.note || "";
+  }else{
+    $("debtModalTitle").textContent = "ONGEZA DENI";
+    $("debtKind").value = debtTab;
+    $("debtPerson").value = "";
+    $("debtAmount").value = "";
+    $("debtDate").value = today();
+    $("debtDue").value = "";
+    $("debtNote").value = "";
   }
+  window.debtKindChanged();
+  $("debtModal").classList.remove("hidden");
+};
 
+window.saveDebt = () => guard(async () => {
+  if(!currentUser) return;
+  const id = $("debtId").value;
+  const kind = $("debtKind").value;
+  const person = $("debtPerson").value.trim();
+  const amount = round2($("debtAmount").value || 0);
+  const date = $("debtDate").value || today();
+  const dueDate = $("debtDue").value || "";
+  const note = $("debtNote").value.trim();
 
-  list.innerHTML =
-    transactions
-      .slice(0,50)
-      .map(t => {
+  if(!person || amount <= 0){ showToast("Ingiza jina na kiasi sahihi."); return; }
 
-        let icon = "↕";
-
-        if(t.type === "income")
-          icon = "↑";
-
-        if(t.type === "expense")
-          icon = "↓";
-
-        if(t.type === "transfer")
-          icon = "⇄";
-
-
-        let subtitle = "";
-
-        if(t.type === "transfer"){
-
-          subtitle =
-            escapeHTML(
-              accountName(t.fromAccountId)
-            ) +
-            " → " +
-            escapeHTML(
-              accountName(t.toAccountId)
-            );
-
-        }else{
-
-          subtitle =
-            escapeHTML(
-              accountName(t.accountId)
-            );
-
-        }
-
-
-        const sign =
-          t.type === "income"
-          ? "+"
-          : t.type === "expense"
-          ? "-"
-          : "⇄";
-
-
-        return `
-
-          <div
-            class="transaction"
-            onclick="openTransactionModal('${t.type}','${t.id}')">
-
-            <div class="transaction-icon ${t.type}">
-              ${icon}
-            </div>
-
-            <div class="transaction-info">
-
-              <strong>
-                ${escapeHTML(t.description)}
-              </strong>
-
-              <small>
-                ${subtitle}
-                ·
-                ${escapeHTML(t.date)}
-              </small>
-
-            </div>
-
-            <div class="transaction-amount">
-
-              <strong class="amount-${t.type}">
-                ${sign}${money(t.amount)}
-              </strong>
-
-              <small>
-                ${String(t.type).toUpperCase()}
-              </small>
-
-            </div>
-
-          </div>
-
-        `;
-
-      }).join("");
-
-}
-
-
-/* ================= DASHBOARD ================= */
-
-function updateDashboard(){
-
-  const balance =
-    accounts.reduce(
-      (sum,a)=>
-        sum + Number(a.balance || 0),
-      0
-    );
-
-  $("heroBalance").textContent =
-    money(balance);
-
-  $("heroAccounts").textContent =
-    accounts.length;
-
-  $("heroTransactions").textContent =
-    transactions.length;
-
-
-  updateSummary();
-
-}
-
-
-function getFilteredTransactions(){
-
-  if(summaryPeriod === "all")
-    return transactions;
-
-  const now =
-    new Date();
-
-  return transactions.filter(t => {
-
-    if(!t.date) return false;
-
-    if(summaryPeriod === "today"){
-
-      return t.date === today();
-
+  if(id){
+    const cur = debts.find(x => x.id === id);
+    if(cur && amount < debtStats(cur).paid - 0.0001){
+      showToast("Kiasi hakiwezi kuwa chini ya kilicholipwa tayari.");
+      return;
     }
-
-    if(summaryPeriod === "month"){
-
-      const month =
-        now.toISOString().slice(0,7);
-
-      return t.date.startsWith(month);
-
-    }
-
-    return true;
-
-  });
-
-}
-
-
-function updateSummary(){
-
-  const list =
-    getFilteredTransactions();
-
-  let income = 0;
-
-  let expense = 0;
-
-  let transfer = 0;
-
-
-  list.forEach(t => {
-
-    const amount =
-      Number(t.amount || 0);
-
-    if(t.type === "income")
-      income += amount;
-
-    if(t.type === "expense")
-      expense += amount;
-
-    if(t.type === "transfer")
-      transfer += amount;
-
-  });
-
-
-  $("sumIncome").textContent =
-    money(income);
-
-  $("sumExpense").textContent =
-    money(expense);
-
-  $("sumNet").textContent =
-    money(income - expense);
-
-  $("sumTransfer").textContent =
-    money(transfer);
-
-}
-
-
-window.setSummaryPeriod = function(period){
-
-  summaryPeriod = period;
-
-  document
-    .querySelectorAll(".period-tabs button")
-    .forEach(b =>
-      b.classList.remove("active")
-    );
-
-  if(period === "all")
-    $("sumAll").classList.add("active");
-
-  if(period === "month")
-    $("sumMonth").classList.add("active");
-
-  if(period === "today")
-    $("sumToday").classList.add("active");
-
-  updateSummary();
-
-};
-
-
-/* ================= REPORTS ================= */
-
-window.renderReports = function(){
-
-  const days =
-    Number(
-      $("reportPeriod").value || 7
-    );
-
-  renderIncomeExpenseChart(days);
-
-  renderAccountPerformance();
-
-  renderFinancialStats();
-
-  renderDailyTrend(days);
-
-  renderRates();
-
-  renderTransferStats();
-
-};
-
-
-function dateOffset(daysAgo){
-
-  const d = new Date();
-
-  d.setDate(
-    d.getDate() - daysAgo
-  );
-
-  return d
-    .toISOString()
-    .slice(0,10);
-
-}
-
-
-function renderIncomeExpenseChart(days){
-
-  const chart =
-    $("incomeExpenseChart");
-
-  const data = [];
-
-  for(let i=days-1;i>=0;i--){
-
-    const date =
-      dateOffset(i);
-
-    let income = 0;
-
-    let expense = 0;
-
-    transactions
-      .filter(t => t.date === date)
-      .forEach(t => {
-
-        if(t.type === "income")
-          income += Number(t.amount || 0);
-
-        if(t.type === "expense")
-          expense += Number(t.amount || 0);
-
-      });
-
-    data.push({
-      date,
-      income,
-      expense
-    });
-
   }
-
-
-  const max =
-    Math.max(
-      1,
-      ...data.flatMap(x =>
-        [x.income,x.expense]
-      )
-    );
-
-
-  chart.innerHTML =
-    data.map(x => {
-
-      const incomeHeight =
-        Math.max(
-          2,
-          (x.income / max) * 140
-        );
-
-      const expenseHeight =
-        Math.max(
-          2,
-          (x.expense / max) * 140
-        );
-
-
-      return `
-
-        <div class="bar-wrap">
-
-          <div
-            class="bar income"
-            title="Income: ${money(x.income)}"
-            style="height:${incomeHeight}px">
-          </div>
-
-          <div
-            class="bar expense"
-            title="Expense: ${money(x.expense)}"
-            style="height:${expenseHeight}px">
-          </div>
-
-          <div class="bar-label">
-            ${x.date.slice(5)}
-          </div>
-
-        </div>
-
-      `;
-
-    }).join("");
-
-}
-
-
-function renderAccountPerformance(){
-
-  const box =
-    $("accountPerformance");
-
-  if(!accounts.length){
-
-    box.innerHTML =
-      `<div class="empty">Hakuna accounts.</div>`;
-
-    return;
-
-  }
-
-
-  const max =
-    Math.max(
-      1,
-      ...accounts.map(a =>
-        Math.abs(Number(a.balance || 0))
-      )
-    );
-
-
-  box.innerHTML =
-    accounts.map(a => {
-
-      const balance =
-        Number(a.balance || 0);
-
-      const percent =
-        Math.min(
-          100,
-          Math.max(
-            2,
-            Math.abs(balance) / max * 100
-          )
-        );
-
-
-      return `
-
-        <div class="performance-row">
-
-          <span>
-            ${escapeHTML(a.name)}
-          </span>
-
-          <div class="progress">
-            <span style="width:${percent}%"></span>
-          </div>
-
-          <strong>
-            ${money(balance)}
-          </strong>
-
-        </div>
-
-      `;
-
-    }).join("");
-
-}
-
-
-function renderFinancialStats(){
-
-  const income =
-    transactions
-      .filter(t => t.type === "income")
-      .reduce(
-        (s,t)=>s+Number(t.amount||0),
-        0
-      );
-
-  const expense =
-    transactions
-      .filter(t => t.type === "expense")
-      .reduce(
-        (s,t)=>s+Number(t.amount||0),
-        0
-      );
-
-  const transfer =
-    transactions
-      .filter(t => t.type === "transfer")
-      .reduce(
-        (s,t)=>s+Number(t.amount||0),
-        0
-      );
-
-
-  $("financialStats").innerHTML = `
-
-    <div class="mini">
-      <small>TOTAL INCOME</small>
-      <strong>${money(income)}</strong>
-    </div>
-
-    <div class="mini">
-      <small>TOTAL EXPENSE</small>
-      <strong>${money(expense)}</strong>
-    </div>
-
-    <div class="mini">
-      <small>TOTAL TRANSFER</small>
-      <strong>${money(transfer)}</strong>
-    </div>
-
-  `;
-
-}
-
-
-function renderDailyTrend(days){
-
-  const box =
-    $("dailyTrend");
-
-  const data = [];
-
-  for(let i=days-1;i>=0;i--){
-
-    const date =
-      dateOffset(i);
-
-    let income = 0;
-
-    let expense = 0;
-
-    transactions
-      .filter(t => t.date === date)
-      .forEach(t => {
-
-        if(t.type === "income")
-          income += Number(t.amount || 0);
-
-        if(t.type === "expense")
-          expense += Number(t.amount || 0);
-
-      });
-
-    data.push({
-      date,
-      income,
-      expense
-    });
-
-  }
-
-
-  if(!data.length){
-
-    box.innerHTML =
-      `<div class="empty">Hakuna data.</div>`;
-
-    return;
-
-  }
-
-
-  box.innerHTML =
-    data.slice(-10).reverse().map(x => `
-
-      <div class="trend-row">
-
-        <small>${x.date}</small>
-
-        <small>
-          <span class="amount-income">
-            +${money(x.income)}
-          </span>
-          &nbsp;
-          <span class="amount-expense">
-            -${money(x.expense)}
-          </span>
-        </small>
-
-      </div>
-
-    `).join("");
-
-}
-
-
-function renderRates(){
-
-  const income =
-    transactions
-      .filter(t=>t.type==="income")
-      .reduce(
-        (s,t)=>s+Number(t.amount||0),
-        0
-      );
-
-  const expense =
-    transactions
-      .filter(t=>t.type==="expense")
-      .reduce(
-        (s,t)=>s+Number(t.amount||0),
-        0
-      );
-
-
-  const saving =
-    income > 0
-    ? ((income-expense)/income)*100
-    : 0;
-
-  const expenseRate =
-    income > 0
-    ? (expense/income)*100
-    : 0;
-
-
-  $("savingRate").textContent =
-    Math.round(saving) + "%";
-
-  $("expenseRate").textContent =
-    Math.round(expenseRate) + "%";
-
-}
-
-
-function renderTransferStats(){
-
-  const list =
-    transactions.filter(
-      t => t.type === "transfer"
-    );
-
-  const total =
-    list.reduce(
-      (s,t)=>s+Number(t.amount||0),
-      0
-    );
-
-
-  $("transferStats").innerHTML = `
-
-    <div class="trend-row">
-      <small>COUNT</small>
-      <strong>${list.length}</strong>
-    </div>
-
-    <div class="trend-row">
-      <small>VOLUME</small>
-      <strong>${money(total)}</strong>
-    </div>
-
-  `;
-
-}
-
-
-/* ================= NAVIGATOR ================= */
-
-window.toggleNavigator = function(){
-
-  $("notebookNav")
-    .classList.toggle("open");
-
-  $("navOverlay")
-    .classList.toggle("show");
-
-};
-
-
-window.closeNavigator = function(){
-
-  $("notebookNav")
-    .classList.remove("open");
-
-  $("navOverlay")
-    .classList.remove("show");
-
-};
-
-
-window.goToSection = function(id,btn){
-
-  const el = $(id);
-
-  if(!el) return;
-
-  closeNavigator();
-
-  document
-    .querySelectorAll(".nav-item")
-    .forEach(x =>
-      x.classList.remove("active")
-    );
-
-  if(btn)
-    btn.classList.add("active");
-
-  setTimeout(()=>{
-
-    el.scrollIntoView({
-      behavior:"smooth",
-      block:"start"
-    });
-
-  },180);
-
-};
-
-
-document.addEventListener(
-  "keydown",
-  e => {
-
-    if(e.key === "Escape")
-      closeNavigator();
-
-  }
-);
-
-
-/* ================= MODALS ================= */
-
-window.closeModal = function(id){
-
-  const el = $(id);
-
-  if(el)
-    el.classList.add("hidden");
-
-};
-
-
-window.modalBackground = function(event,id){
-
-  if(event.target.id === id)
-    closeModal(id);
-
-};
-
-
-window.addEventListener(
-  "click",
-  event => {
-
-    const modal =
-      event.target.closest(".modal");
-
-    if(!modal) return;
-
-  }
-);
-
-
-/* ================= PDF ================= */
-
-window.exportPDF = async function(){
-
-  if(!currentUser){
-
-    showToast("Login kwanza.");
-
-    return;
-
-  }
-
 
   try{
-
-    showToast("Preparing PDF...");
-
-
-    const pdf =
-      new jsPDF({
-        orientation:"portrait",
-        unit:"mm",
-        format:"a4"
-      });
-
-
-    const pageWidth =
-      pdf.internal.pageSize.getWidth();
-
-    const pageHeight =
-      pdf.internal.pageSize.getHeight();
-
-
-    let y = 18;
-
-
-    function line(){
-
-      pdf.setDrawColor(30,100,80);
-
-      pdf.line(
-        15,
-        y,
-        pageWidth-15,
-        y
-      );
-
-      y += 6;
-
-    }
-
-
-    function text(value,size=10){
-
-      pdf.setFontSize(size);
-
-      pdf.setTextColor(30,45,45);
-
-      pdf.text(
-        String(value),
-        15,
-        y
-      );
-
-      y += 6;
-
-      if(y > pageHeight-20){
-
-        pdf.addPage();
-
-        y = 18;
-
-      }
-
-    }
-
-
-    pdf.setFontSize(20);
-
-    pdf.setTextColor(0,130,80);
-
-    pdf.text(
-      "GODEN WALLET",
-      15,
-      y
-    );
-
-    y += 8;
-
-
-    pdf.setFontSize(9);
-
-    pdf.setTextColor(80,100,100);
-
-    pdf.text(
-      "PERSONAL FINANCE REPORT",
-      15,
-      y
-    );
-
-    y += 7;
-
-    line();
-
-
-    const totalBalance =
-      accounts.reduce(
-        (s,a)=>s+Number(a.balance||0),
-        0
-      );
-
-
-    const totalIncome =
-      transactions
-        .filter(t=>t.type==="income")
-        .reduce(
-          (s,t)=>s+Number(t.amount||0),
-          0
-        );
-
-
-    const totalExpense =
-      transactions
-        .filter(t=>t.type==="expense")
-        .reduce(
-          (s,t)=>s+Number(t.amount||0),
-          0
-        );
-
-
-    const totalTransfer =
-      transactions
-        .filter(t=>t.type==="transfer")
-        .reduce(
-          (s,t)=>s+Number(t.amount||0),
-          0
-        );
-
-
-    text(
-      "Generated: " +
-      new Date().toLocaleString("en-TZ"),
-      9
-    );
-
-    text(
-      "User: " +
-      (currentUser.email || "GODEN"),
-      9
-    );
-
-    y += 3;
-
-    text(
-      "TOTAL BALANCE: " +
-      money(totalBalance),
-      13
-    );
-
-    text(
-      "TOTAL INCOME: " +
-      money(totalIncome),
-      10
-    );
-
-    text(
-      "TOTAL EXPENSE: " +
-      money(totalExpense),
-      10
-    );
-
-    text(
-      "TOTAL TRANSFER: " +
-      money(totalTransfer),
-      10
-    );
-
-
-    y += 3;
-
-    line();
-
-
-    text(
-      "ACCOUNTS",
-      13
-    );
-
-
-    accounts.forEach((a,index)=>{
-
-      text(
-        (index+1) +
-        ". " +
-        a.name +
-        " | " +
-        a.type +
-        " | " +
-        money(a.balance),
-        9
-      );
-
-    });
-
-
-    y += 3;
-
-    line();
-
-
-    text(
-      "TRANSACTIONS",
-      13
-    );
-
-
-    if(!transactions.length){
-
-      text(
-        "No transactions.",
-        9
-      );
-
+    const data = { kind, person, amount, date, dueDate, note, updatedAt:serverTimestamp() };
+    if(id){
+      await setDoc(doc(db,"users",currentUser.uid,"debts",id),data,{merge:true});
+      showToast("Deni limebadilishwa.");
     }else{
-
-      transactions.forEach((t,index)=>{
-
-        if(y > pageHeight-35){
-
-          pdf.addPage();
-
-          y = 18;
-
-          text(
-            "TRANSACTIONS - CONTINUED",
-            13
-          );
-
-        }
-
-
-        let accountText = "";
-
-        if(t.type === "transfer"){
-
-          accountText =
-            accountName(t.fromAccountId) +
-            " -> " +
-            accountName(t.toAccountId);
-
-        }else{
-
-          accountText =
-            accountName(t.accountId);
-
-        }
-
-
-        const row =
-          (index+1) +
-          ". " +
-          t.date +
-          " | " +
-          t.type.toUpperCase() +
-          " | " +
-          t.description +
-          " | " +
-          money(t.amount) +
-          " | " +
-          accountText;
-
-
-        const wrapped =
-          pdf.splitTextToSize(
-            row,
-            pageWidth-30
-          );
-
-
-        wrapped.forEach(w => {
-
-          text(w,8);
-
-        });
-
-        y += 1;
-
-      });
-
+      await addDoc(collection(db,"users",currentUser.uid,"debts"),{ ...data, payments:[], createdAt:serverTimestamp() });
+      showToast("Deni limeongezwa.");
     }
+    window.closeModal("debtModal");
+    await loadDebts();
+    renderDebts();
+    updateDashboard();
+  }catch(err){ console.error(err); showToast("Deni halijahifadhiwa."); }
+});
 
-
-    line();
-
-    text(
-      "GENERATED BY GODEN TECH",
-      9
-    );
-
-    text(
-      "END OF REPORT",
-      9
-    );
-
-
-    const fileDate =
-      today();
-
-
-    pdf.save(
-      "GODEN_WALLET_Report_" +
-      fileDate +
-      ".pdf"
-    );
-
-
-    showToast(
-      "PDF imetengenezwa."
-    );
-
-
-  }catch(err){
-
-    console.error(err);
-
-    showToast(
-      "PDF imeshindikana. Angalia internet."
-    );
-
-  }
-
+window.deleteDebt = async function(id){
+  const d = debts.find(x => x.id === id);
+  if(!d) return;
+  const linked = (d.payments || []).filter(p => p.txId).length;
+  const msg = linked
+    ? `Futa deni la ${d.person}? Malipo ${linked} yaliyoingia kwenye accounts yatabaki kwenye historia na balances hazitabadilika.`
+    : `Futa deni la ${d.person}?`;
+  if(!confirm(msg)) return;
+  try{
+    await deleteDoc(doc(db,"users",currentUser.uid,"debts",id));
+    expandedDebts.delete(id);
+    await loadDebts();
+    renderDebts();
+    updateDashboard();
+    showToast("Deni limefutwa.");
+  }catch(err){ console.error(err); showToast("Deni halijafutwa."); }
 };
 
+window.toggleDebtHistory = id => {
+  if(expandedDebts.has(id)) expandedDebts.delete(id);
+  else expandedDebts.add(id);
+  renderDebts();
+};
 
-/* ================= ENTER LOGIN ================= */
+window.openPaymentModal = function(id){
+  const d = debts.find(x => x.id === id);
+  if(!d) return;
+  const s = debtStats(d);
+  const isRecv = d.kind === "receivable";
+  $("paymentDebtId").value = id;
+  $("paymentModalTitle").textContent = isRecv ? "ALIYELIPA (NAMDAI)" : "NIMELIPA (NADAIWA)";
+  $("paymentInfo").innerHTML = `<b>${escapeHTML(d.person)}</b><br>Jumla: ${money(s.total)} | Imelipwa: ${money(s.paid)}<br>Imebaki: <b>${money(s.remaining)}</b>`;
+  $("paymentAccountLabel").textContent = isRecv ? "Pesa iingie account gani?" : "Pesa itoke account gani?";
+  $("paymentAccount").innerHTML =
+    accounts.map(a => `<option value="${a.id}">${escapeHTML(a.name)} — ${money(a.balance)}</option>`).join("") +
+    `<option value="">Usiguse account yoyote (kumbukumbu tu)</option>`;
+  $("paymentAmount").value = "";
+  $("paymentDate").value = today();
+  $("paymentNote").value = "";
+  $("paymentModal").classList.remove("hidden");
+};
 
-$("loginPassword").addEventListener(
-  "keydown",
-  e => {
+window.fillRemaining = function(){
+  const d = debts.find(x => x.id === $("paymentDebtId").value);
+  if(d) $("paymentAmount").value = debtStats(d).remaining;
+};
 
-    if(e.key === "Enter")
-      login();
+// Malipo huingia kwenye account (balance + transaction) kwa pamoja, au kumbukumbu tu
+window.savePayment = () => guard(async () => {
+  if(!currentUser) return;
+  const id = $("paymentDebtId").value;
+  const d = debts.find(x => x.id === id);
+  if(!d) return;
+  const amount = round2($("paymentAmount").value || 0);
+  const date = $("paymentDate").value || today();
+  const note = $("paymentNote").value.trim();
+  const accId = $("paymentAccount").value;
 
+  if(amount <= 0 || amount > debtStats(d).remaining + 0.0001){ showToast("Ingiza kiasi sahihi."); return; }
+
+  const uid = currentUser.uid;
+  const debtRef = doc(db,"users",uid,"debts",id);
+
+  try{
+    await runTransaction(db, async tx => {
+      const dSnap = await tx.get(debtRef);
+      if(!dSnap.exists()) throw new Error("NODEBT");
+      const cur = { id, ...dSnap.data(), payments: dSnap.data().payments || [] };
+      if(amount > debtStats(cur).remaining + 0.0001) throw new Error("OVER");
+
+      let aSnap = null;
+      if(accId) aSnap = await tx.get(accRef(accId));
+
+      const payment = { id:genId(), amount, date, note, accountId:"", txId:"" };
+
+      if(aSnap && aSnap.exists()){
+        const isRecv = cur.kind === "receivable";
+        const txRef = doc(collection(db,"users",uid,"transactions"));
+        tx.update(accRef(accId),{
+          balance: round2(Number(aSnap.data().balance || 0) + (isRecv ? amount : -amount)),
+          updatedAt: serverTimestamp()
+        });
+        tx.set(txRef,{
+          type: isRecv ? "income" : "expense",
+          description: "Malipo ya deni: " + cur.person,
+          amount, date,
+          accountId: accId, fromAccountId:"", toAccountId:"",
+          debtId: id,
+          createdAt: serverTimestamp()
+        });
+        payment.accountId = accId;
+        payment.txId = txRef.id;
+      }
+
+      tx.update(debtRef,{ payments:[...cur.payments,payment], updatedAt:serverTimestamp() });
+    });
+
+    expandedDebts.add(id);
+    window.closeModal("paymentModal");
+    await loadAll();
+    showToast("Malipo yamehifadhiwa.");
+  }catch(err){
+    console.error(err);
+    showToast(err.message === "OVER" ? "Kiasi kinazidi deni lililobaki." : "Malipo hayajahifadhiwa.");
   }
-);
+});
 
+window.deletePayment = (debtId,paymentId) => guard(async () => {
+  const d = debts.find(x => x.id === debtId);
+  if(!d || !confirm("Futa malipo haya?")) return;
+  const uid = currentUser.uid;
+  const debtRef = doc(db,"users",uid,"debts",debtId);
 
-/* ================= INITIAL UI ================= */
+  try{
+    await runTransaction(db, async tx => {
+      const dSnap = await tx.get(debtRef);
+      if(!dSnap.exists()) throw new Error("NODEBT");
+      const payments = dSnap.data().payments || [];
+      const p = payments.find(x => x.id === paymentId);
+      if(!p) return;
 
-$("transactionDate").value =
-  today();
+      let aSnap = null;
+      if(p.accountId) aSnap = await tx.get(accRef(p.accountId));
 
-$("footerYear").textContent =
-  new Date().getFullYear();
+      if(aSnap && aSnap.exists()){
+        const isRecv = dSnap.data().kind === "receivable";
+        const amt = Number(p.amount || 0);
+        tx.update(accRef(p.accountId),{
+          balance: round2(Number(aSnap.data().balance || 0) + (isRecv ? -amt : amt)),
+          updatedAt: serverTimestamp()
+        });
+      }
+      if(p.txId) tx.delete(doc(db,"users",uid,"transactions",p.txId));
+      tx.update(debtRef,{ payments: payments.filter(x => x.id !== paymentId), updatedAt:serverTimestamp() });
+    });
 
+    await loadAll();
+    showToast("Malipo yamefutwa.");
+  }catch(err){ console.error(err); showToast("Malipo hayajafutwa."); }
+});
+
+function renderDebts(){
+  const sumRemaining = kind => debts.filter(d => d.kind === kind).reduce((s,d) => s + debtStats(d).remaining,0);
+  const openCount = kind => debts.filter(d => d.kind === kind && !isSettled(d)).length;
+
+  $("debtTotalRecv").textContent = money(sumRemaining("receivable"));
+  $("debtTotalPay").textContent = money(sumRemaining("payable"));
+  $("debtCountRecv").textContent = openCount("receivable") + " wazi";
+  $("debtCountPay").textContent = openCount("payable") + " wazi";
+  $("navBadgeRecv").textContent = openCount("receivable");
+  $("navBadgePay").textContent = openCount("payable");
+  $("heroDebts").textContent = openCount("receivable") + openCount("payable");
+
+  $("tabReceivable").classList.toggle("active",debtTab === "receivable");
+  $("tabPayable").classList.toggle("active",debtTab === "payable");
+
+  let list = debts.filter(d => d.kind === debtTab);
+  if(debtFilter === "open") list = list.filter(d => !isSettled(d));
+  if(debtFilter === "paid") list = list.filter(d => isSettled(d));
+
+  const box = $("debtList");
+  if(!list.length){
+    box.innerHTML = `<div class="empty">Hakuna madeni yoyote kwenye kipengele hiki.<br><br><button class="secondary-btn" onclick="openDebtModal()">+ ONGEZA DENI</button></div>`;
+    return;
+  }
+
+  box.innerHTML = list.map(d => {
+    const s = debtStats(d);
+    const settled = s.remaining <= 0.0001;
+    const st = debtState(d);
+    const cls = d.kind === "receivable" ? "recv" : "pay";
+    const percent = s.total > 0 ? Math.min(100,(s.paid / s.total) * 100) : 0;
+    const open = expandedDebts.has(d.id);
+
+    return `
+      <div class="debt-card ${cls}">
+        <div class="debt-head">
+          <div class="debt-avatar">${escapeHTML((d.person || "?").trim().charAt(0).toUpperCase())}</div>
+          <div class="debt-who">
+            <strong>${escapeHTML(d.person)}</strong>
+            <small>Tarehe: ${escapeHTML(d.date || "-")}${d.dueDate ? " · Mwisho: " + escapeHTML(d.dueDate) : ""}</small>
+          </div>
+          <span class="badge ${st.cls}">${st.label}</span>
+        </div>
+        ${d.note ? `<div style="margin-top:10px;font-size:12px;color:var(--muted)">${escapeHTML(d.note)}</div>` : ""}
+        <div class="debt-amounts">
+          <div><small>JUMLA</small><strong>${money(s.total)}</strong></div>
+          <div><small>IMELIPWA</small><strong style="color:var(--green)">${money(s.paid)}</strong></div>
+          <div><small>IMEBAKI</small><strong style="color:var(--blue)">${money(s.remaining)}</strong></div>
+        </div>
+        <div class="progress" style="margin-top:10px"><span style="width:${percent}%"></span></div>
+        <div class="debt-actions">
+          ${settled ? "" : `<button class="pay-btn grow" onclick="openPaymentModal('${d.id}')">+ MALIPO</button>`}
+          <button class="grow" onclick="toggleDebtHistory('${d.id}')">${open ? "FICHA HISTORIA" : "HISTORIA (" + (d.payments || []).length + ")"}</button>
+          <button onclick="openDebtModal('${d.id}')">✎</button>
+          <button class="del" onclick="deleteDebt('${d.id}')">🗑</button>
+        </div>
+        ${open ? renderDebtHistory(d) : ""}
+      </div>
+    `;
+  }).join("");
+}
+
+function renderDebtHistory(d){
+  const payments = [...(d.payments || [])].sort((a,b) => String(a.date || "").localeCompare(String(b.date || "")));
+
+  const rows = payments.map(p => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px">
+        <span style="color:var(--muted)">${escapeHTML(p.date || "-")}</span>
+        <span style="flex:1;margin:0 10px;min-width:0">${p.note ? escapeHTML(p.note) : "Malipo"}${p.accountId ? ` <small style="color:var(--faint)">· ${escapeHTML(accountName(p.accountId))}</small>` : ""}</span>
+        <strong style="color:var(--green)">-${money(p.amount)}</strong>
+        <button onclick="deletePayment('${d.id}','${p.id}')" style="margin-left:8px;color:var(--faint);padding:0 6px">×</button>
+      </div>
+    `).join("");
+
+  return `<div style="margin-top:12px;padding-top:10px;border-top:1px dashed var(--border)">${rows || `<small style="color:var(--muted)">Hakuna kumbukumbu za malipo.</small>`}</div>`;
+}
+
+/* ---------------- DASHBOARD & SUMMARY ---------------- */
+
+function updateDashboard(){
+  const balance = accounts.reduce((sum,a) => sum + Number(a.balance || 0),0);
+  $("heroBalance").textContent = money(balance);
+  $("heroAccounts").textContent = accounts.length;
+  $("heroTransactions").textContent = transactions.length;
+  updateSummary();
+}
+
+function getFilteredTransactions(){
+  if(summaryPeriod === "all") return transactions;
+  const curDate = today();
+  return transactions.filter(t => {
+    if(!t.date) return false;
+    const dStr = String(t.date);
+    if(summaryPeriod === "today") return dStr === curDate;
+    if(summaryPeriod === "month") return dStr.startsWith(curDate.slice(0,7));
+    return true;
+  });
+}
+
+function updateSummary(){
+  const list = getFilteredTransactions();
+  let income = 0, expense = 0, transfer = 0;
+  list.forEach(t => {
+    const amount = Number(t.amount || 0);
+    if(t.type === "income") income += amount;
+    if(t.type === "expense") expense += amount;
+    if(t.type === "transfer") transfer += amount;
+  });
+  $("sumIncome").textContent = money(income);
+  $("sumExpense").textContent = money(expense);
+  $("sumNet").textContent = money(income - expense);
+  $("sumTransfer").textContent = money(transfer);
+}
+
+window.setSummaryPeriod = function(period){
+  summaryPeriod = period;
+  document.querySelectorAll("#summarySection .period-tabs button").forEach(b => b.classList.remove("active"));
+  if(period === "all") $("sumAll").classList.add("active");
+  if(period === "month") $("sumMonth").classList.add("active");
+  if(period === "today") $("sumToday").classList.add("active");
+  updateSummary();
+};
+
+/* ---------------- REPORTS ---------------- */
+
+window.renderReports = function(){
+  const days = Number($("reportPeriod").value || 7);
+  renderIncomeExpenseChart(days);
+  renderAccountPerformance();
+  renderFinancialStats();
+  renderDailyTrend(days);
+  renderRates();
+  renderTransferStats();
+};
+
+function dateOffset(daysAgo){
+  const d = new Date();
+  d.setDate(d.getDate() - daysAgo);
+  return localISO(d);
+}
+
+function dailyData(days){
+  const byDate = {};
+  transactions.forEach(t => {
+    if(!t.date) return;
+    const r = byDate[t.date] || (byDate[t.date] = { income:0, expense:0 });
+    if(t.type === "income") r.income += Number(t.amount || 0);
+    if(t.type === "expense") r.expense += Number(t.amount || 0);
+  });
+  const data = [];
+  for(let i = days - 1; i >= 0; i--){
+    const date = dateOffset(i);
+    const r = byDate[date] || { income:0, expense:0 };
+    data.push({ date, income:r.income, expense:r.expense });
+  }
+  return data;
+}
+
+function renderIncomeExpenseChart(days){
+  const data = dailyData(days);
+  const max = Math.max(1,...data.flatMap(x => [x.income,x.expense]));
+  $("incomeExpenseChart").innerHTML = data.map(x => `
+    <div class="bar-wrap">
+      <div class="bar-pair">
+        <div class="bar income" title="Income: ${money(x.income)}" style="height:${Math.max(3,(x.income / max) * 140)}px"></div>
+        <div class="bar expense" title="Expense: ${money(x.expense)}" style="height:${Math.max(3,(x.expense / max) * 140)}px"></div>
+      </div>
+      <div class="bar-label">${x.date.slice(5)}</div>
+    </div>
+  `).join("");
+}
+
+function renderAccountPerformance(){
+  const box = $("accountPerformance");
+  if(!accounts.length){ box.innerHTML = `<div class="empty">Hakuna accounts.</div>`; return; }
+  const max = Math.max(1,...accounts.map(a => Math.abs(Number(a.balance || 0))));
+  box.innerHTML = accounts.map(a => {
+    const balance = Number(a.balance || 0);
+    return `
+      <div style="display:grid;grid-template-columns:80px 1fr 110px;align-items:center;gap:8px;font-size:12px">
+        <span class="perf-name">${escapeHTML(a.name)}</span>
+        <div class="progress"><span style="width:${Math.min(100,Math.max(2,Math.abs(balance)/max*100))}%"></span></div>
+        <strong style="text-align:right">${money(balance)}</strong>
+      </div>
+    `;
+  }).join("");
+}
+
+const sumType = type => transactions.filter(t => t.type === type).reduce((s,t) => s + Number(t.amount || 0),0);
+
+function renderFinancialStats(){
+  $("financialStats").innerHTML = `
+    <div style="padding:10px;border-radius:12px;background:var(--bg);min-width:0"><small style="color:var(--muted)">INCOME</small><br><strong style="word-break:break-word">${money(sumType("income"))}</strong></div>
+    <div style="padding:10px;border-radius:12px;background:var(--bg);min-width:0"><small style="color:var(--muted)">EXPENSE</small><br><strong style="word-break:break-word">${money(sumType("expense"))}</strong></div>
+    <div style="padding:10px;border-radius:12px;background:var(--bg);min-width:0"><small style="color:var(--muted)">TRANSFER</small><br><strong style="word-break:break-word">${money(sumType("transfer"))}</strong></div>
+  `;
+}
+
+function renderDailyTrend(days){
+  const data = dailyData(days);
+  $("dailyTrend").innerHTML = data.slice(-8).reverse().map(x => `
+    <div style="display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px">
+      <small style="color:var(--muted)">${x.date}</small>
+      <small><span style="color:var(--green)">+${money(x.income)}</span> &nbsp; <span style="color:var(--red)">-${money(x.expense)}</span></small>
+    </div>
+  `).join("");
+}
+
+function renderRates(){
+  const income = sumType("income");
+  const expense = sumType("expense");
+  $("savingRate").textContent = Math.round(income > 0 ? ((income - expense) / income) * 100 : 0) + "%";
+  $("expenseRate").textContent = Math.round(income > 0 ? (expense / income) * 100 : 0) + "%";
+}
+
+function renderTransferStats(){
+  const list = transactions.filter(t => t.type === "transfer");
+  $("transferStats").innerHTML = `
+    <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:12px"><span>Total Transfers:</span><strong>${list.length}</strong></div>
+    <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:12px"><span>Volume:</span><strong>${money(list.reduce((s,t) => s + Number(t.amount || 0),0))}</strong></div>
+  `;
+}
+
+/* ---------------- NAVIGATION & MODALS ---------------- */
+
+window.toggleNavigator = () => { $("notebookNav").classList.toggle("open"); $("navOverlay").classList.toggle("show"); };
+window.closeNavigator = () => { $("notebookNav").classList.remove("open"); $("navOverlay").classList.remove("show"); };
+
+window.goToSection = function(id,btn){
+  const el = $(id);
+  if(!el) return;
+  window.closeNavigator();
+  window.closeDebts();
+  document.querySelectorAll(".nav-item").forEach(x => x.classList.remove("active"));
+  if(btn) btn.classList.add("active");
+  setTimeout(()=> el.scrollIntoView({ behavior:"smooth", block:"start" }),150);
+};
+
+window.closeModal = id => { const el = $(id); if(el) el.classList.add("hidden"); };
+window.modalBackground = (e,id) => { if(e.target.id === id) window.closeModal(id); };
+
+document.addEventListener("keydown", e => {
+  if(e.key === "Escape"){
+    document.querySelectorAll(".modal:not(.hidden)").forEach(m => m.classList.add("hidden"));
+    window.closeNavigator();
+  }
+});
+
+/* ---------------- PDF ---------------- */
+
+async function buildPDF(mode){
+  if(!currentUser){ showToast("Login kwanza."); return; }
+  showToast("Inatayarisha PDF...");
+  try{
+    // jsPDF inapakiwa wakati wa kutumia tu, ili app isiharibike kama CDN haipatikani
+    const mod = await import("https://cdn.jsdelivr.net/npm/jspdf@2.5.2/+esm");
+    const JsPDF = mod.jsPDF || (mod.default && (mod.default.jsPDF || mod.default));
+    const pdf = new JsPDF({ unit:"mm", format:"a4" });
+
+    const W = 210, M = 14;
+    let y = 18;
+    const DARK = [15,23,42], GREEN = [5,150,105], GRAY = [110,120,135];
+
+    const ensure = h => { if(y + h > 284){ pdf.addPage(); y = 18; } };
+    const cut = (s,n) => { s = String(s ?? ""); return n && s.length > n ? s.slice(0,n-2) + ".." : s; };
+
+    const heading = text => {
+      ensure(16);
+      y += 4;
+      pdf.setFont("helvetica","bold"); pdf.setFontSize(12); pdf.setTextColor(...GREEN);
+      pdf.text(text, M, y);
+      y += 2.5;
+      pdf.setDrawColor(...GREEN); pdf.setLineWidth(0.4); pdf.line(M, y, W - M, y);
+      y += 6;
+      pdf.setFont("helvetica","normal"); pdf.setFontSize(9); pdf.setTextColor(...DARK);
+    };
+
+    const kv = (label,value) => {
+      ensure(6);
+      pdf.setFont("helvetica","normal"); pdf.setTextColor(...GRAY); pdf.text(label, M, y);
+      pdf.setFont("helvetica","bold"); pdf.setTextColor(...DARK); pdf.text(String(value), M + 60, y);
+      y += 6;
+    };
+
+    // cols: { x, right?, max? } — kwa right, x ni ukingo wa kulia
+    const tableRow = (cells,cols,bold,color) => {
+      ensure(7);
+      pdf.setFont("helvetica", bold ? "bold" : "normal");
+      pdf.setFontSize(9);
+      pdf.setTextColor(...(color || DARK));
+      cells.forEach((c,i) => {
+        const col = cols[i];
+        const s = cut(c,col.max);
+        if(col.right) pdf.text(s, col.x, y, { align:"right" });
+        else pdf.text(s, col.x, y);
+      });
+      y += 6;
+    };
+
+    const tableHeader = (cells,cols) => {
+      tableRow(cells,cols,true,GRAY);
+      pdf.setDrawColor(200); pdf.setLineWidth(0.2); pdf.line(M, y - 4, W - M, y - 4);
+    };
+
+    const sumOf = (list,type) => list.filter(t => t.type === type).reduce((s,t) => s + Number(t.amount || 0),0);
+    const monthKey = today().slice(0,7);
+    const monthTx = transactions.filter(t => String(t.date || "").startsWith(monthKey));
+
+    // Kichwa
+    pdf.setFont("helvetica","bold"); pdf.setFontSize(18); pdf.setTextColor(...GREEN);
+    pdf.text(mode === "debts" ? "GODEN WALLET - RIPOTI YA MADENI" : "GODEN WALLET REPORT", M, y);
+    y += 8;
+    pdf.setFont("helvetica","normal"); pdf.setFontSize(9); pdf.setTextColor(...GRAY);
+    pdf.text("Tarehe: " + new Date().toLocaleString("sw-TZ") + "   |   " + (currentUser.email || ""), M, y);
+    y += 4;
+
+    const debtCols = [
+      { x:M, max:22 }, { x:50, max:12 }, { x:104, right:true }, { x:136, right:true }, { x:168, right:true }, { x:172, max:14 }
+    ];
+
+    const addDebts = withPayments => {
+      heading("MADENI");
+      const recvOpen = debts.filter(d => d.kind === "receivable").reduce((s,d) => s + debtStats(d).remaining,0);
+      const payOpen = debts.filter(d => d.kind === "payable").reduce((s,d) => s + debtStats(d).remaining,0);
+      kv("Ninayodai (nadai watu):", fmt(recvOpen));
+      kv("Ninayodaiwa (nadaiwa):", fmt(payOpen));
+      y += 2;
+      if(!debts.length){ tableRow(["Hakuna madeni."],[{x:M}],false,GRAY); return; }
+      tableHeader(["Jina","Aina","Jumla","Imelipwa","Imebaki","Hali"],debtCols);
+      debts.forEach(d => {
+        const s = debtStats(d);
+        tableRow([
+          d.person, d.kind === "receivable" ? "Ninadai" : "Nadaiwa",
+          fmt(s.total), fmt(s.paid), fmt(s.remaining), debtState(d).label
+        ],debtCols);
+        if(withPayments){
+          [...(d.payments || [])].sort((a,b) => String(a.date||"").localeCompare(String(b.date||""))).forEach(p => {
+            ensure(5);
+            pdf.setFontSize(8); pdf.setTextColor(...GRAY);
+            pdf.text("   " + (p.date || "-") + "  " + cut(p.note || "Malipo",40), M + 4, y);
+            pdf.text("-" + fmt(p.amount), 136, y, { align:"right" });
+            y += 5;
+          });
+        }
+      });
+    };
+
+    if(mode === "debts"){
+      addDebts(true);
+    }else{
+      heading("MUHTASARI");
+      kv("Total Balance:", fmt(accounts.reduce((s,a) => s + Number(a.balance || 0),0)));
+      kv("Income (zote):", fmt(sumOf(transactions,"income")));
+      kv("Expense (zote):", fmt(sumOf(transactions,"expense")));
+      kv("Net (zote):", fmt(sumOf(transactions,"income") - sumOf(transactions,"expense")));
+      kv("Income (mwezi huu):", fmt(sumOf(monthTx,"income")));
+      kv("Expense (mwezi huu):", fmt(sumOf(monthTx,"expense")));
+      kv("Transfers (zote):", fmt(sumOf(transactions,"transfer")));
+
+      heading("ACCOUNTS");
+      const accCols = [{ x:M, max:34 }, { x:80, max:20 }, { x:W - M, right:true }];
+      if(!accounts.length) tableRow(["Hakuna accounts."],[{x:M}],false,GRAY);
+      else{
+        tableHeader(["Jina","Aina","Balance"],accCols);
+        accounts.forEach(a => tableRow([a.name, a.type || "Other", fmt(a.balance)],accCols));
+      }
+
+      addDebts(false);
+
+      heading("TRANSACTIONS ZA HIVI KARIBUNI (40)");
+      const txCols = [{ x:M }, { x:34, max:9 }, { x:50, max:28 }, { x:100, max:22 }, { x:W - M, right:true }];
+      if(!transactions.length) tableRow(["Hakuna transactions."],[{x:M}],false,GRAY);
+      else{
+        tableHeader(["Tarehe","Aina","Maelezo","Account","Kiasi"],txCols);
+        transactions.slice(0,40).forEach(t => {
+          const acc = t.type === "transfer" ? accountName(t.fromAccountId) + " -> " + accountName(t.toAccountId) : accountName(t.accountId);
+          const sign = t.type === "income" ? "+" : t.type === "expense" ? "-" : "";
+          tableRow([t.date || "-", t.type, t.description, acc, sign + fmt(t.amount)],txCols);
+        });
+      }
+    }
+
+    // Namba za kurasa
+    const pages = pdf.getNumberOfPages();
+    for(let i = 1; i <= pages; i++){
+      pdf.setPage(i);
+      pdf.setFont("helvetica","normal"); pdf.setFontSize(8); pdf.setTextColor(...GRAY);
+      pdf.text("Goden Wallet - Ukurasa " + i + "/" + pages, W / 2, 291, { align:"center" });
+    }
+
+    pdf.save(mode === "debts" ? "Goden_Wallet_Madeni.pdf" : "Goden_Wallet_Report.pdf");
+    showToast("PDF Imetengenezwa!");
+  }catch(err){
+    console.error(err);
+    showToast("Imeshindikana kutengeneza PDF. Hakikisha una intaneti.");
+  }
+}
+
+window.exportPDF = () => buildPDF("full");
+window.exportDebtsPDF = () => buildPDF("debts");
+
+$("loginPassword").addEventListener("keydown", e => { if(e.key === "Enter") window.login(); });
+$("transactionDate").value = today();
+$("footerYear").textContent = new Date().getFullYear();
 </script>
-
 </body>
 </html>
